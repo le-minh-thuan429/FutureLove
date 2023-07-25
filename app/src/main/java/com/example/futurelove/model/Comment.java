@@ -39,9 +39,9 @@ public class Comment {
     }
     public Comment(String device_cmt, String dia_chi_ip, int id_comment, long id_toan_bo_su_kien, String imageattach, String noi_dung_cmt) {
         this.device_cmt = device_cmt;
-        this.dia_chi_ip = dia_chi_ip;
-        this.id_comment = id_comment;
-        this.id_toan_bo_su_kien = id_toan_bo_su_kien;
+        this.dia_chi_ip = dia_chi_ip; // ip cmt
+        this.id_comment = id_comment; // x
+        this.id_toan_bo_su_kien = id_toan_bo_su_kien; //
         this.imageattach = imageattach;
         this.noi_dung_cmt = noi_dung_cmt;
     }

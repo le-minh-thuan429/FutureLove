@@ -84,6 +84,7 @@ public class TimelineFragment extends Fragment {
     private String imgBase64Female = "";
     private String urlImgFemale;
     private String urlImgMale;
+
     @SuppressLint("SimpleDateFormat")
     @Nullable
     @Override
@@ -96,7 +97,7 @@ public class TimelineFragment extends Fragment {
         try {
             initUi();
             initListener();
-        }catch (Exception e) {
+        } catch (Exception e) {
             Log.e("ExceptionRuntime", e.toString());
         }
 
@@ -105,6 +106,7 @@ public class TimelineFragment extends Fragment {
 
 
     private void initListener() {
+
         fragmentTimelineBinding.viewpagerTimeline.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -117,13 +119,14 @@ public class TimelineFragment extends Fragment {
                 pageAdapter.notifyItemChanged(position - 2);
             }
         });
+
         fragmentTimelineBinding.btnSend.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(View view) {
                 String content = fragmentTimelineBinding.edtComment.getText().toString().trim();
                 if (true) { //!content.isEmpty()
-                    if (imgBase64Female != null && !imgBase64Female.trim().isEmpty() ) {
+                    if (imgBase64Female != null && !imgBase64Female.trim().isEmpty()) {
                         kProgressHUD.show();
                         new AsyncTask<Void, Void, Void>() {
                             @SuppressLint("StaticFieldLeak")
@@ -147,7 +150,7 @@ public class TimelineFragment extends Fragment {
                         }.execute();
 
                     } else {
-                        urlImageComment ="";
+                        urlImageComment = "";
                         postComment(content);
                         fragmentTimelineBinding.edtComment.setText("");
                         closeKeyboard();
@@ -176,13 +179,14 @@ public class TimelineFragment extends Fragment {
         });
         fragmentTimelineBinding.nestScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             private int previousScrollY = 0;
+
             @Override
             public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 int dy = scrollY - previousScrollY;
 
                 if (dy > 20) {
                     fragmentTimelineBinding.btnFloating.hide();
-                } else if (dy <0) {
+                } else if (dy < 0) {
                     fragmentTimelineBinding.btnFloating.show();
                 }
 
@@ -193,7 +197,7 @@ public class TimelineFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                String url = Server.URI_LINK_WEB_DETAIL+mainActivity.eventSummaryCurrentId; // Liên kết web mà bạn muốn mở
+                String url = Server.URI_LINK_WEB_DETAIL + mainActivity.eventSummaryCurrentId; // Liên kết web mà bạn muốn mở
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
             }
@@ -201,7 +205,7 @@ public class TimelineFragment extends Fragment {
     }
 
     private void saveEventToStorage() {
-        int number = new Random().nextInt(3)+2;
+        int number = new Random().nextInt(3) + 2;
 
         EventHistoryDb.getInstance(getActivity()).eventHistoryDao().insert(eventList.get(number));
     }
@@ -271,7 +275,13 @@ public class TimelineFragment extends Fragment {
         String deviceName = Build.MANUFACTURER + Build.MODEL;
         String IpNetwork = getDeviceIpAddress(getActivity());
 
-        Comment comment = new Comment(deviceName, IpNetwork, 0, mainActivity.eventSummaryCurrentId, urlImageComment, content);
+        Comment comment = new Comment(
+                deviceName,
+                IpNetwork,
+                1,
+                mainActivity.eventSummaryCurrentId,
+                urlImageComment,
+                content);
 
 //        Map<String, String> headers = new HashMap<>();
 //        headers.put("noi_dung_cmt", comment.getNoi_dung_cmt());
@@ -281,13 +291,18 @@ public class TimelineFragment extends Fragment {
 //        headers.put("imageattach", comment.getImageattach());
 
         ApiService apiService = RetrofitClient.getInstance(Server.DOMAIN2).getRetrofit().create(ApiService.class);
-        Call<Object> call = apiService.postDataComment(comment.getNoi_dung_cmt(), comment.getDevice_cmt(),
-                String.valueOf(comment.getId_toan_bo_su_kien()), comment.getDia_chi_ip(), comment.getImageattach());
+        Call<Object> call = apiService.postDataComment(
+                1,
+                comment.getNoi_dung_cmt(),
+                comment.getDevice_cmt(),
+                String.valueOf(comment.getId_toan_bo_su_kien()),
+                comment.getDia_chi_ip(),
+                comment.getImageattach());
         call.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
                 if (response.isSuccessful() && response.body() != null) {
-//                    xu ly sau khi commrnt
+//                    xu ly sau khi comment
                     getDataComment();
                 }
                 if (kProgressHUD.isShowing()) {
@@ -304,7 +319,7 @@ public class TimelineFragment extends Fragment {
                 }
             }
         });
-        imgBase64Female="";
+        imgBase64Female = "";
         urlImageComment = "";
 
     }
@@ -318,7 +333,7 @@ public class TimelineFragment extends Fragment {
 //        initViewpagerEvent
         eventList = new ArrayList<>();
 
-        eventTimelineAdapter = new EventTimelineAdapter(eventList,this::iOnClickAddEvent, getContext());
+        eventTimelineAdapter = new EventTimelineAdapter(eventList, this::iOnClickAddEvent, getContext());
         fragmentTimelineBinding.viewpagerTimeline.setAdapter(eventTimelineAdapter);
 
 //        initRcvComment
@@ -331,16 +346,16 @@ public class TimelineFragment extends Fragment {
     }
 
     private void iOnClickAddEvent(int id_event) {
-           Intent intent = new Intent(getActivity(), AddEventActivity.class);
+        Intent intent = new Intent(getActivity(), AddEventActivity.class);
         // intent.putExtra("id_summary_event", id_summary_event);
         // intent.putExtra("id_event", id_event);
-    //   startActivity(intent);
+        //   startActivity(intent);
 
-         Bundle bundle=new Bundle();
+        Bundle bundle = new Bundle();
         //bundle.putLong("id_summary_event", id_summary_event);
-         bundle.putInt("id_event", id_event);
-         intent.putExtra("send_id",bundle);
-         startActivity(intent);
+        bundle.putInt("id_event", id_event);
+        intent.putExtra("send_id", bundle);
+        startActivity(intent);
 
     }
 
@@ -573,7 +588,7 @@ public class TimelineFragment extends Fragment {
 
     private void resizeLayoutComment() {
         urlImageComment = "";
-        imgBase64Female= "";
+        imgBase64Female = "";
         fragmentTimelineBinding.edtComment.setText("");
         fragmentTimelineBinding.imageComment.setVisibility(View.GONE);
         fragmentTimelineBinding.closeImage.setVisibility(View.GONE);
@@ -581,6 +596,7 @@ public class TimelineFragment extends Fragment {
         layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics());
         fragmentTimelineBinding.layoutComment.setLayoutParams(layoutParams);
     }
+
     private void closeKeyboard() {
         View view = requireActivity().getCurrentFocus();
         if (view != null) {

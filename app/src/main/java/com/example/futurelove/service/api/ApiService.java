@@ -39,19 +39,19 @@ public interface ApiService {
 //            .create(ApiService.class);
 
 
-
-
     @GET(Server.URI_PAIRING)
     Call<ResponsePairingDto> postEvent(@HeaderMap Map<String, String> headers);
-    @GET(Server.URI_LIST_EVENT_HOME+"{page}")
+
+    @GET(Server.URI_LIST_EVENT_HOME + "{page}")
     Call<List<List<EventHomeDto>>> getListAllEventHome(@Path("page") long id);
-    @GET(Server.URI_LIST_EVENT_TIMELINE+ "{id}")
+
+    @GET(Server.URI_LIST_EVENT_TIMELINE + "{id}")
     Call<List<EventHomeDto>> getListEventDetail(@Path("id") long id);
 
-    @GET(Server.URI_LIST_COMMENT_BY_EVENT_ID +"{id}")
+    @GET(Server.URI_LIST_COMMENT_BY_EVENT_ID + "{id}")
     Call<List<Comment>> getListCommentByEventId(@Path("id") long id);
 
-    @GET(Server.URI_LIST_COMMENT_NEW +"{id}")
+    @GET(Server.URI_LIST_COMMENT_NEW + "{id}")
     Call<CommentDto> getListCommentNew(@Path("id") int id);
 
     @FormUrlEncoded
@@ -73,14 +73,12 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST(Server.URI_POST_COMMENT)
-    Call<Object> postDataComment(@Field("noi_dung_cmt") String content,
-                          @Field("device_cmt") String device,
-                          @Field("id_toan_bo_su_kien") String idSummary,
-                          @Field("ipComment") String ip,
-                          @Field("imageattach") String imagEattach);
-
-
-
+    Call<Object> postDataComment(@Field("id_user") int idUser,
+                                 @Field("noi_dung_cmt") String content,
+                                 @Field("device_cmt") String device,
+                                 @Field("id_toan_bo_su_kien") String idSummary,
+                                 @Field("ipComment") String ip,
+                                 @Field("imageattach") String imagEattach);
 
 
 }
