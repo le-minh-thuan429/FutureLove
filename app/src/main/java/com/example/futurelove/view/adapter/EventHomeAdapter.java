@@ -1,14 +1,17 @@
 package com.example.futurelove.view.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.futurelove.databinding.ItemRcvHistoryEventBinding;
+import com.example.futurelove.model.Comon;
 import com.example.futurelove.model.EventHomeDto;
 import com.squareup.picasso.Picasso;
 
@@ -24,9 +27,11 @@ public class EventHomeAdapter extends  RecyclerView.Adapter<EventHomeAdapter.Eve
         this.eventList = eventList;
     }
 
-    public EventHomeAdapter(List<List<EventHomeDto>> eventList, IOnClickItemListener iOnClickItem) {
+    Context context;
+    public EventHomeAdapter(List<List<EventHomeDto>> eventList, IOnClickItemListener iOnClickItem, Context context) {
         this.eventList = eventList;
         this.iOnClickItem = iOnClickItem;
+        this.context = context;
     }
     public interface IOnClickItemListener {
         void onClickItem(long id);
@@ -65,11 +70,17 @@ public class EventHomeAdapter extends  RecyclerView.Adapter<EventHomeAdapter.Eve
         String date = events.get(number).getReal_time().substring(0, commaIndex);
         holder.itemRcvHistoryEventBinding.tvContent.setText(events.get(number).getTen_su_kien());
         holder.itemRcvHistoryEventBinding.tvDate.setText(date);
+        //Toast.makeText(context,  events.get(number).getTom_Luoc_Text(), Toast.LENGTH_SHORT).show();
 
         holder.itemRcvHistoryEventBinding.layoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 iOnClickItem.onClickItem(events.get(number).getId_toan_bo_su_kien());
+                Comon.link_nam_chua_swap=events.get(number).getLink_nam_chua_swap();
+                Comon.link_nam_goc=events.get(number).getLink_nam_goc();
+                Comon.link_nu_chua_swap=events.get(number).getLink_nu_chua_swap();
+                Comon.link_nu_goc=events.get(number).getLink_nu_goc();
+                Comon.tom_Luoc_Text=events.get(number).getTom_Luoc_Text();
             }
         });
 

@@ -54,6 +54,20 @@ public interface ApiService {
     @GET(Server.URI_LIST_COMMENT_NEW +"{id}")
     Call<CommentDto> getListCommentNew(@Path("id") int id);
 
+    @FormUrlEncoded
+    @POST(Server.URI_POST_EVENT_TIMELINE)
+    Call<Object> postListEventDetail(@Field("id") String id,
+                                     @Field("link_da_swap") String linkdaswap,
+                                     @Field("link_nam_chua_swap") String linknamchuaswap,
+                                     @Field("link_nam_goc") String linknamgoc,
+                                     @Field("link_nu_chua_swap") String linknuchuaswap,
+                                     @Field("link_nu_goc") String link_nu_goc,
+                                     @Field("noi_dung_su_kien") String noidungsukien,
+                                     @Field("real_time") String realtime,
+                                     @Field("so_thu_tu_su_kien") String sothutusukien,
+                                     @Field("ten_su_kien") String tensukien,
+                                     @Field("tom_Luoc_Text") String tom_Luoc_Text);
+
     @POST(Server.URI_POST_COMMENT)
     Call<Object> postComment(@HeaderMap Map<String, String> headers);
 

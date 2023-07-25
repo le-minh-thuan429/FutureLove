@@ -46,11 +46,13 @@ public class EventHomeDto {
     @ColumnInfo()
     private String ten_su_kien;
 
+    @ColumnInfo()
+    private String tom_Luoc_Text;
 
     public EventHomeDto() {
     }
 
-    public EventHomeDto(int id, int id_toan_bo_su_kien, String link_da_swap, String link_nam_chua_swap, String link_nam_goc, String link_nu_chua_swap, String link_nu_goc, String noi_dung_su_kien, String real_time, int so_thu_tu_su_kien, String ten_su_kien) {
+    public EventHomeDto(int id, int id_toan_bo_su_kien, String link_da_swap, String link_nam_chua_swap, String link_nam_goc, String link_nu_chua_swap, String link_nu_goc, String noi_dung_su_kien, String real_time, float so_thu_tu_su_kien, String ten_su_kien ) {
         this.id = id;
         this.id_toan_bo_su_kien = id_toan_bo_su_kien;
         this.link_da_swap = link_da_swap;
@@ -62,6 +64,29 @@ public class EventHomeDto {
         this.real_time = real_time;
         this.so_thu_tu_su_kien = so_thu_tu_su_kien;
         this.ten_su_kien = ten_su_kien;
+
+    }
+    public EventHomeDto(int id, String link_da_swap, String link_nam_chua_swap, String link_nam_goc, String link_nu_chua_swap, String link_nu_goc, String noi_dung_su_kien, String real_time, float so_thu_tu_su_kien, String ten_su_kien ,String tom_Luoc_Text) {
+        this.id = id;
+        this.link_da_swap = link_da_swap;
+        this.link_nam_chua_swap = link_nam_chua_swap;
+        this.link_nam_goc = link_nam_goc;
+        this.link_nu_chua_swap = link_nu_chua_swap;
+        this.link_nu_goc = link_nu_goc;
+        this.noi_dung_su_kien = noi_dung_su_kien;
+        this.real_time = real_time;
+        this.so_thu_tu_su_kien = so_thu_tu_su_kien;
+        this.ten_su_kien = ten_su_kien;
+        this.tom_Luoc_Text = tom_Luoc_Text;
+
+    }
+
+    public void setTom_Luoc_Text(String tom_Luoc_Text) {
+        this.tom_Luoc_Text = tom_Luoc_Text;
+    }
+
+    public String getTom_Luoc_Text() {
+        return tom_Luoc_Text;
     }
 
     public EventHomeDto(int numberOrder, int id, int id_toan_bo_su_kien, String link_da_swap, String link_nam_chua_swap, String link_nam_goc, String link_nu_chua_swap, String link_nu_goc, String noi_dung_su_kien, String real_time, float so_thu_tu_su_kien, String ten_su_kien) {
@@ -77,7 +102,9 @@ public class EventHomeDto {
         this.real_time = real_time;
         this.so_thu_tu_su_kien = so_thu_tu_su_kien;
         this.ten_su_kien = ten_su_kien;
+
     }
+
 
     public int getNumberOrder() {
         return numberOrder;

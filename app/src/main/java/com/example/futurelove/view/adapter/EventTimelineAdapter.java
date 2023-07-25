@@ -1,8 +1,10 @@
 package com.example.futurelove.view.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,20 +17,22 @@ import java.util.List;
 
 public class EventTimelineAdapter extends RecyclerView.Adapter<EventTimelineAdapter.EventTimelineViewHolder> {
     private List<EventHomeDto> eventList;
+    Context context;
 
 
     public void setData(List<EventHomeDto> eventList) {
         this.eventList = eventList;
     }
 
-    public EventTimelineAdapter(List<EventHomeDto> eventList, IOnClickAddEventListener iOnClickAddEvent) {
+    public EventTimelineAdapter(List<EventHomeDto> eventList, IOnClickAddEventListener iOnClickAddEvent, Context context) {
         this.eventList = eventList;
         this.iOnClickAddEvent = iOnClickAddEvent;
+        this.context = context;
     }
 
     public final IOnClickAddEventListener iOnClickAddEvent;
     public interface IOnClickAddEventListener {
-        void onClickAddEvent(long id_summary_event, long id_event);
+        void onClickAddEvent(int id_event);
     }
 
     @NonNull
@@ -51,10 +55,11 @@ public class EventTimelineAdapter extends RecyclerView.Adapter<EventTimelineAdap
         String date = event.getReal_time().substring(0, commaIndex);
         holder.itemTimelineEventBinding.tvContent.setText(event.getNoi_dung_su_kien());
         holder.itemTimelineEventBinding.tvDate.setText(date);
+       // Toast.makeText(context,  event.getId()+"", Toast.LENGTH_SHORT).show();
         holder.itemTimelineEventBinding.btnAddEvnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                iOnClickAddEvent.onClickAddEvent(event.getId_toan_bo_su_kien(), event.getId());
+                iOnClickAddEvent.onClickAddEvent(event.getId());
             }
         });
 

@@ -100,8 +100,6 @@ public class TimelineFragment extends Fragment {
             Log.e("ExceptionRuntime", e.toString());
         }
 
-
-
         return fragmentTimelineBinding.getRoot();
     }
 
@@ -124,7 +122,7 @@ public class TimelineFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String content = fragmentTimelineBinding.edtComment.getText().toString().trim();
-                if (!content.isEmpty()) {
+                if (true) { //!content.isEmpty()
                     if (imgBase64Female != null && !imgBase64Female.trim().isEmpty() ) {
                         kProgressHUD.show();
                         new AsyncTask<Void, Void, Void>() {
@@ -320,7 +318,7 @@ public class TimelineFragment extends Fragment {
 //        initViewpagerEvent
         eventList = new ArrayList<>();
 
-        eventTimelineAdapter = new EventTimelineAdapter(eventList, this::iOnClickAddEvent);
+        eventTimelineAdapter = new EventTimelineAdapter(eventList,this::iOnClickAddEvent, getContext());
         fragmentTimelineBinding.viewpagerTimeline.setAdapter(eventTimelineAdapter);
 
 //        initRcvComment
@@ -332,11 +330,18 @@ public class TimelineFragment extends Fragment {
 
     }
 
-    private void iOnClickAddEvent(long id_summary_event, long id_event) {
-        Intent intent = new Intent(getActivity(), AddEventActivity.class);
-        intent.putExtra("id_summary_event", id_summary_event);
-        intent.putExtra("id_event", id_event);
-        startActivity(intent);
+    private void iOnClickAddEvent(int id_event) {
+           Intent intent = new Intent(getActivity(), AddEventActivity.class);
+        // intent.putExtra("id_summary_event", id_summary_event);
+        // intent.putExtra("id_event", id_event);
+    //   startActivity(intent);
+
+         Bundle bundle=new Bundle();
+        //bundle.putLong("id_summary_event", id_summary_event);
+         bundle.putInt("id_event", id_event);
+         intent.putExtra("send_id",bundle);
+         startActivity(intent);
+
     }
 
     private void iOnClickItemComment(long idEventSummary) {

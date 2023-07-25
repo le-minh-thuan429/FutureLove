@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.futurelove.databinding.FragmentHomeBinding;
+import com.example.futurelove.model.Comon;
 import com.example.futurelove.model.EventHomeDto;
 import com.example.futurelove.service.api.ApiService;
 import com.example.futurelove.service.api.RetrofitClient;
@@ -106,7 +107,7 @@ public class HomeFragment extends Fragment {
         eventList = new ArrayList<>();
          linearLayoutManager = new LinearLayoutManager(getActivity(), GridLayoutManager.VERTICAL, false);
         fragmentHomeBinding.rcvHome.setLayoutManager(linearLayoutManager);
-        eventHomeAdapter = new EventHomeAdapter(eventList ,this::goToEventDetail);
+        eventHomeAdapter = new EventHomeAdapter(eventList ,this::goToEventDetail,getContext());
         fragmentHomeBinding.rcvHome.setAdapter(eventHomeAdapter);
     }
 

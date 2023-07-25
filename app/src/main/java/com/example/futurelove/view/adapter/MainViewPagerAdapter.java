@@ -39,15 +39,15 @@ public class MainViewPagerAdapter extends FragmentStateAdapter {
             case 2:
                 return new PairingFragment();
             case 3:
-                return new HistoryFragment();
+                return new TimelineFragment(); //HistoryFragment();
             case 4:
-                return new TimelineFragment();
+                return new HistoryFragment();
         }
         return new HomeFragment();
     }
 
     @Override
     public int getItemCount() {
-        return 5;
-    }
+        return 4;
+    }  //5
 }
