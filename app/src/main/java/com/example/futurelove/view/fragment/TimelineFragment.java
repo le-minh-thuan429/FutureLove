@@ -86,8 +86,8 @@ public class TimelineFragment extends Fragment {
     private String urlImgFemale;
     private String urlImgMale;
 
+    // Store a local device ip address
     private String networkIp;
-
 
     @SuppressLint("SimpleDateFormat")
     @Nullable
@@ -105,12 +105,10 @@ public class TimelineFragment extends Fragment {
         } catch (Exception e) {
             Log.e("ExceptionRuntime", e.toString());
         }
-
         return fragmentTimelineBinding.getRoot();
     }
 
     private void initListener() {
-
 
         fragmentTimelineBinding.viewpagerTimeline.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -129,11 +127,14 @@ public class TimelineFragment extends Fragment {
             @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(View view) {
-
+                // Get a returned ip from api
                 callDeviceIpAddress(new QueryValueCallback() {
                     @Override
                     public void onQueryValueReceived(String queryValue) {
+                        // Assign the return ip address by queryValue
                         networkIp = queryValue;
+
+                        // Post comment with the current IP
                         String content = fragmentTimelineBinding.edtComment.getText().toString().trim();
                         if (true) { //!content.isEmpty()
                             if (imgBase64Female != null && !imgBase64Female.trim().isEmpty()) {
@@ -168,11 +169,9 @@ public class TimelineFragment extends Fragment {
                                     kProgressHUD.dismiss();
 
                             }
-
                             saveEventToStorage();
                         }
                     }
-
                     @Override
                     public void onApiCallFailed(Throwable t) {
                     }
@@ -571,6 +570,10 @@ public class TimelineFragment extends Fragment {
         fragmentTimelineBinding.viewpagerTimeline.setCurrentItem(page - 1);
     }
 
+
+    /*
+    * @Param callback: listen a returned value from calling api
+    * */
     public void callDeviceIpAddress(QueryValueCallback callback) {
 //        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 //        if (wifiManager != null && wifiManager.isWifiEnabled()) {
