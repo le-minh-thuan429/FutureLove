@@ -9,8 +9,8 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.example.futurelove.R;
-import com.example.futurelove.databinding.ActivityMainBinding;
+import com.thinkdiffai.futurelove.R;
+import com.thinkdiffai.futurelove.databinding.ActivityMainBinding;
 import com.thinkdiffai.futurelove.view.adapter.MainViewPagerAdapter;
 import com.google.android.material.navigation.NavigationBarView;
 

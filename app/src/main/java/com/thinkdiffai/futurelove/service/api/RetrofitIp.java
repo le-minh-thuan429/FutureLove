@@ -12,6 +12,9 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/*
+* Usage: call api for local ip address
+* */
 public class RetrofitIp {
 
     private static Retrofit retrofit;

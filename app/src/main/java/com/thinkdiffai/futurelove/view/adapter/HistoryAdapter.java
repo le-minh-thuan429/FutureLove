@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.daimajia.swipe.SwipeLayout;
-import com.example.futurelove.databinding.ItemHistoryBinding;
+import com.thinkdiffai.futurelove.databinding.ItemHistoryBinding;
 import com.thinkdiffai.futurelove.model.EventHomeDto;
 import com.thinkdiffai.futurelove.util.Util;
 

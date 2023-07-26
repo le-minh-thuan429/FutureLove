@@ -10,9 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.futurelove.R;
-import com.example.futurelove.databinding.ItemIndicatorTimelineBinding;
 
+import com.thinkdiffai.futurelove.R;
+import com.thinkdiffai.futurelove.databinding.ItemIndicatorTimelineBinding;
 
 import java.util.List;
 

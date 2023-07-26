@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.futurelove.databinding.FragmentHomeBinding;
+import com.thinkdiffai.futurelove.databinding.FragmentHomeBinding;
 import com.thinkdiffai.futurelove.model.EventHomeDto;
 import com.thinkdiffai.futurelove.service.api.ApiService;
 import com.thinkdiffai.futurelove.service.api.RetrofitClient;

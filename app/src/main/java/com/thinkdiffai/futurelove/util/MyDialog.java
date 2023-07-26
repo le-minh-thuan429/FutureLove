@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.example.futurelove.R;
+import com.thinkdiffai.futurelove.R;
 
 
 public class MyDialog extends Dialog {

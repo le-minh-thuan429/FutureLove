@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.futurelove.databinding.ItemTimelineEventBinding;
+import com.thinkdiffai.futurelove.databinding.ItemTimelineEventBinding;
 import com.thinkdiffai.futurelove.model.EventHomeDto;
 import com.squareup.picasso.Picasso;
 

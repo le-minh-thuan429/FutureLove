@@ -3,8 +3,6 @@ package com.thinkdiffai.futurelove.modelfor4gdomain;
 
 import com.google.gson.annotations.SerializedName;
 
-import retrofit2.Call;
-
 public class NetworkModel {
     @SerializedName("as")
     private String asX;

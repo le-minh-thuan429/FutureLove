@@ -17,8 +17,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.futurelove.R;
-import com.example.futurelove.databinding.ActivityAddEventBinding;
+import com.thinkdiffai.futurelove.R;
+import com.thinkdiffai.futurelove.databinding.ActivityAddEventBinding;
 import com.thinkdiffai.futurelove.model.Comon;
 import com.thinkdiffai.futurelove.model.EventHomeDto;
 import com.thinkdiffai.futurelove.service.api.ApiService;

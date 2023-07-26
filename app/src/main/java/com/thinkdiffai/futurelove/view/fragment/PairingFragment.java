@@ -32,8 +32,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import com.example.futurelove.R;
-import com.example.futurelove.databinding.FragmentPairingBinding;
+import com.thinkdiffai.futurelove.R;
+import com.thinkdiffai.futurelove.databinding.FragmentPairingBinding;
 import com.thinkdiffai.futurelove.util.MyDialog;
 import com.thinkdiffai.futurelove.util.Util;
 import com.thinkdiffai.futurelove.model.ResponsePairingDto;

@@ -35,8 +35,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.futurelove.databinding.FragmentTimelineBinding;
 import com.thinkdiffai.futurelove.DbStorage.EventHistoryDb;
+import com.thinkdiffai.futurelove.databinding.FragmentTimelineBinding;
 import com.thinkdiffai.futurelove.modelfor4gdomain.NetworkModel;
 import com.thinkdiffai.futurelove.service.api.QueryValueCallback;
 import com.thinkdiffai.futurelove.service.api.RetrofitIp;

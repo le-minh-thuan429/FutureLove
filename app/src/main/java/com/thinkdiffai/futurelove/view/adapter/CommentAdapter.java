@@ -15,8 +15,8 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.example.futurelove.R;
-import com.example.futurelove.databinding.ItemCommentBinding;
+import com.thinkdiffai.futurelove.R;
+import com.thinkdiffai.futurelove.databinding.ItemCommentBinding;
 import com.thinkdiffai.futurelove.util.Util;
 import com.thinkdiffai.futurelove.model.Comment;
 

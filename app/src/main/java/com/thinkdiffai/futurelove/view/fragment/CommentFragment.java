@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.futurelove.databinding.FragmentCommentBinding;
+import com.thinkdiffai.futurelove.databinding.FragmentCommentBinding;
 import com.thinkdiffai.futurelove.model.Comment;
 import com.thinkdiffai.futurelove.model.CommentDto;
 import com.thinkdiffai.futurelove.service.api.ApiService;

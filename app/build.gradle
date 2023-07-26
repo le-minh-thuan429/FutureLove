@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.example.futurelove'
+    namespace 'com.thinkdiffai.futurelove'
     compileSdk 33
 
     defaultConfig {
