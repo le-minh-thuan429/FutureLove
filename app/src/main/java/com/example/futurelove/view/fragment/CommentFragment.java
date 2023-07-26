@@ -155,7 +155,7 @@ public class CommentFragment extends Fragment {
         call.enqueue(new Callback<CommentDto>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(Call<CommentDto> call, Response<CommentDto> response) {
+            public void onResponse(@NonNull Call<CommentDto> call, @NonNull Response<CommentDto> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     CommentDto comments = response.body();
                     if (comments.getComment().size() > 0) {
@@ -173,13 +173,13 @@ public class CommentFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<CommentDto> call, Throwable t) {
+            public void onFailure(@NonNull Call<CommentDto> call, @NonNull Throwable t) {
                 isLoading=false;
                 if (kProgressHUD.isShowing()) {
                     kProgressHUD.dismiss();
 
                 }
-                Log.e("MainActivityLog", t.getMessage().toString());
+                Log.e("MainActivityLog", t.getMessage());
             }
         });
     }

@@ -10,8 +10,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,6 +36,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.futurelove.DbStorage.EventHistoryDb;
+import com.example.futurelove.modelfor4gdomain.NetworkModel;
+import com.example.futurelove.service.api.QueryValueCallback;
+import com.example.futurelove.service.api.RetrofitIp;
 import com.example.futurelove.util.Util;
 import com.example.futurelove.databinding.FragmentTimelineBinding;
 import com.example.futurelove.model.Comment;
@@ -85,6 +86,9 @@ public class TimelineFragment extends Fragment {
     private String urlImgFemale;
     private String urlImgMale;
 
+    private String networkIp;
+
+
     @SuppressLint("SimpleDateFormat")
     @Nullable
     @Override
@@ -93,6 +97,7 @@ public class TimelineFragment extends Fragment {
         String patternDate = "yyyy-MM-dd, HH:mm:ss";
         dateFormat = new SimpleDateFormat(patternDate);
         mainActivity = (MainActivity) getActivity();
+        assert mainActivity != null;
         kProgressHUD = mainActivity.createHud();
         try {
             initUi();
@@ -104,8 +109,8 @@ public class TimelineFragment extends Fragment {
         return fragmentTimelineBinding.getRoot();
     }
 
-
     private void initListener() {
+
 
         fragmentTimelineBinding.viewpagerTimeline.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -124,43 +129,56 @@ public class TimelineFragment extends Fragment {
             @SuppressLint("StaticFieldLeak")
             @Override
             public void onClick(View view) {
-                String content = fragmentTimelineBinding.edtComment.getText().toString().trim();
-                if (true) { //!content.isEmpty()
-                    if (imgBase64Female != null && !imgBase64Female.trim().isEmpty()) {
-                        kProgressHUD.show();
-                        new AsyncTask<Void, Void, Void>() {
-                            @SuppressLint("StaticFieldLeak")
-                            @Override
-                            protected Void doInBackground(Void... params) {
-                                urlImageComment = Util.uploadImage2(imgBase64Female, getActivity());
-                                return null;
-                            }
 
-                            @SuppressLint("StaticFieldLeak")
-                            @Override
-                            protected void onPostExecute(Void result) {
-                                postComment(content);
+                callDeviceIpAddress(new QueryValueCallback() {
+                    @Override
+                    public void onQueryValueReceived(String queryValue) {
+                        networkIp = queryValue;
+                        String content = fragmentTimelineBinding.edtComment.getText().toString().trim();
+                        if (true) { //!content.isEmpty()
+                            if (imgBase64Female != null && !imgBase64Female.trim().isEmpty()) {
+                                kProgressHUD.show();
+                                new AsyncTask<Void, Void, Void>() {
+                                    @SuppressLint("StaticFieldLeak")
+                                    @Override
+                                    protected Void doInBackground(Void... params) {
+                                        urlImageComment = Util.uploadImage2(imgBase64Female, getActivity());
+                                        return null;
+                                    }
 
-                                resizeLayoutComment();
+                                    @SuppressLint("StaticFieldLeak")
+                                    @Override
+                                    protected void onPostExecute(Void result) {
+                                        postComment(content, networkIp);
+
+                                        resizeLayoutComment();
+                                        closeKeyboard();
+                                        if (kProgressHUD.isShowing())
+                                            kProgressHUD.dismiss();
+
+                                    }
+                                }.execute();
+
+                            } else {
+                                urlImageComment = "";
+                                postComment(content, networkIp);
+                                fragmentTimelineBinding.edtComment.setText("");
                                 closeKeyboard();
                                 if (kProgressHUD.isShowing())
                                     kProgressHUD.dismiss();
 
                             }
-                        }.execute();
 
-                    } else {
-                        urlImageComment = "";
-                        postComment(content);
-                        fragmentTimelineBinding.edtComment.setText("");
-                        closeKeyboard();
-                        if (kProgressHUD.isShowing())
-                            kProgressHUD.dismiss();
-
+                            saveEventToStorage();
+                        }
                     }
 
-                    saveEventToStorage();
-                }
+                    @Override
+                    public void onApiCallFailed(Throwable t) {
+                    }
+                });
+
+
             }
         });
 
@@ -268,16 +286,15 @@ public class TimelineFragment extends Fragment {
         }
     }
 
-    private void postComment(String content) {
+    private void postComment(String content, String ipAddress) {
         if (!kProgressHUD.isShowing()) {
             kProgressHUD.show();
         }
         String deviceName = Build.MANUFACTURER + Build.MODEL;
-        String IpNetwork = getDeviceIpAddress(getActivity());
 
         Comment comment = new Comment(
                 deviceName,
-                IpNetwork,
+                ipAddress,
                 1,
                 mainActivity.eventSummaryCurrentId,
                 urlImageComment,
@@ -289,6 +306,7 @@ public class TimelineFragment extends Fragment {
 //        headers.put("id_toan_bo_su_kien", String.valueOf(comment.getId_toan_bo_su_kien()));
 //        headers.put("ipComment", comment.getDia_chi_ip());
 //        headers.put("imageattach", comment.getImageattach());
+
 
         ApiService apiService = RetrofitClient.getInstance(Server.DOMAIN2).getRetrofit().create(ApiService.class);
         Call<Object> call = apiService.postDataComment(
@@ -553,16 +571,36 @@ public class TimelineFragment extends Fragment {
         fragmentTimelineBinding.viewpagerTimeline.setCurrentItem(page - 1);
     }
 
-    public String getDeviceIpAddress(Context context) {
-        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (wifiManager != null && wifiManager.isWifiEnabled()) {
-            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            int ipAddress = wifiInfo.getIpAddress();
-            String ip = android.text.format.Formatter.formatIpAddress(ipAddress);
-            return ip;
-        } else {
-            return null;
-        }
+    public void callDeviceIpAddress(QueryValueCallback callback) {
+//        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+//        if (wifiManager != null && wifiManager.isWifiEnabled()) {
+//            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+//            int ipAddress = wifiInfo.getIpAddress();
+//            String ip = android.text.format.Formatter.formatIpAddress(ipAddress);
+//            return ip;
+//        } else {
+//            return null;
+//        }
+        ApiService getIpApi = RetrofitIp.getInstance("http://ip-api.com/").getRetrofit().create(ApiService.class);
+        Call<NetworkModel> call = getIpApi.getIpApiResponse();
+
+        call.enqueue(new Callback<NetworkModel>() {
+            @Override
+            public void onResponse(Call<NetworkModel> call, Response<NetworkModel> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    NetworkModel networkModel= response.body();
+                    String returnIp = networkModel.getQuery();
+                    callback.onQueryValueReceived(returnIp);
+                } else {
+                    callback.onApiCallFailed(new Throwable("API for IP call failed"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<NetworkModel> call, Throwable t) {
+                callback.onApiCallFailed(t);
+            }
+        });
     }
 
     @Override

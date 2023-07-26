@@ -1,6 +1,5 @@
 package com.example.futurelove.service.api;
 
-import com.example.futurelove.modelfor4gdomain.NetworkModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -9,24 +8,17 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitClient {
+public class RetrofitIp {
 
-    private static RetrofitClient instance;
     private static Retrofit retrofit;
 
-    private String ip;
+    private static RetrofitIp instance;
 
-
-
-    private RetrofitClient(String domain) {
+    private RetrofitIp(String domain) {
 //        interceptor.setLevel(Interceptor.Level.BODY);
         Interceptor interceptor = chain -> {
             Request request = chain.request();
@@ -51,10 +43,9 @@ public class RetrofitClient {
                 .build();
     }
 
-
-    public static synchronized RetrofitClient getInstance(String domain) {
+    public static synchronized RetrofitIp getInstance(String domain) {
         if (instance == null) {
-            instance = new RetrofitClient(domain);
+            instance = new RetrofitIp(domain);
         }
         return instance;
     }
@@ -63,4 +54,5 @@ public class RetrofitClient {
     public Retrofit getRetrofit() {
         return retrofit;
     }
+
 }

@@ -4,6 +4,7 @@ import com.example.futurelove.model.Comment;
 import com.example.futurelove.model.CommentDto;
 import com.example.futurelove.model.EventHomeDto;
 import com.example.futurelove.model.ResponsePairingDto;
+import com.example.futurelove.modelfor4gdomain.NetworkModel;
 
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,9 @@ public interface ApiService {
 
     @GET(Server.URI_PAIRING)
     Call<ResponsePairingDto> postEvent(@HeaderMap Map<String, String> headers);
+
+    @GET(Server.URI_GET_NETWORK_STATUS)
+    Call<NetworkModel> getIpApiResponse();
 
     @GET(Server.URI_LIST_EVENT_HOME + "{page}")
     Call<List<List<EventHomeDto>>> getListAllEventHome(@Path("page") long id);

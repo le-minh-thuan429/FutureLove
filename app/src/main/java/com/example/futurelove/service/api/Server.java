@@ -5,7 +5,11 @@ public interface Server {
     String  DOMAIN2 = "http://14.225.7.221:8989/";
     String  DOMAIN3 = "http://127.0.0.1:8888/";
 
-    String URI_PAIRING = "getdata";
+    String GET_NETWORK_API_DOMAIN = "http://ip-api.com/";
+
+    String URI_PAIRING = "getdata/";
+
+    String URI_GET_NETWORK_STATUS = "json/";
 
     String URI_LIST_EVENT_HOME = "lovehistory/page/";
     String URI_LIST_EVENT_TIMELINE = "lovehistory/";
