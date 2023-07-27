@@ -22,11 +22,6 @@ public class MainActivity extends AppCompatActivity {
     private KProgressHUD kProgressHUD;
     public long eventSummaryCurrentId = -1;
 
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
