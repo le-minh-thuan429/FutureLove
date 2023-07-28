@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -22,18 +23,29 @@ public class MainActivity extends AppCompatActivity {
     private KProgressHUD kProgressHUD;
     public long eventSummaryCurrentId = -1;
 
+    // checking login flag
+    private boolean userLoggedIn = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.transparent));
         activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
+
+        if (!userLoggedIn) {
+            Intent intent = new Intent(this, SignInSignUpActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         setContentView(activityMainBinding.getRoot());
+
         activityMainBinding.viewpager2.setUserInputEnabled(false);
         mainViewPagerAdapter = new MainViewPagerAdapter(this);
         activityMainBinding.viewpager2.setAdapter(mainViewPagerAdapter);
         onPageChangeViewPager();
         onClickBottomNavigation();
-
     }
 
     public void onPageChangeViewPager() {

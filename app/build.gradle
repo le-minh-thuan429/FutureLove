@@ -79,6 +79,12 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.21' // Use the latest version available
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.21' // Use the same version as kotlin-stdlib
 
+    // Fragment
+    implementation 'androidx.fragment:fragment:1.6.1'
+
+    // Navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")
+    implementation("androidx.navigation:navigation-ui-ktx:2.6.0")
 
     implementation "com.daimajia.swipelayout:library:1.2.0@aar"
     implementation 'com.nineoldandroids:library:2.4.0'
