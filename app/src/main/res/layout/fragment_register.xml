@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/id_fragment_register"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/login_bg"
-    tools:context=".LoginFragment">
+    tools:context=".RegisterFragment">
 
     <!--  String: App Name  -->
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -76,6 +77,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_title_desc" />
 
+    <!--  Input for User Email  -->
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edt_email"
+        android:layout_width="328dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edit_text_frame"
+        android:fontFamily="@font/roboto_slab"
+        android:hint="Email"
+        android:padding="10dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edt_user_name" />
+
     <!--  Input for Password  -->
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edt_password"
@@ -93,7 +112,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edt_user_name" />
+        app:layout_constraintTop_toBottomOf="@+id/edt_email" />
 
     <!--  Icon: Show password  -->
     <androidx.appcompat.widget.AppCompatImageView
@@ -108,22 +127,22 @@
         app:layout_constraintStart_toEndOf="@+id/edt_password"
         app:layout_constraintTop_toTopOf="@+id/edt_password" />
 
-<!--    &lt;!&ndash;  Icon: Hide password  &ndash;&gt;-->
-<!--    <androidx.appcompat.widget.AppCompatImageView-->
-<!--        android:id="@+id/ic_hide_password"-->
-<!--        android:layout_width="24dp"-->
-<!--        android:layout_height="24dp"-->
-<!--        android:layout_marginStart="-40dp"-->
-<!--        android:scaleType="fitXY"-->
-<!--        android:src="@drawable/hide_password_icon"-->
-<!--        android:visibility="invisible"-->
-<!--        app:layout_constraintBottom_toBottomOf="@id/edt_password"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/edt_password"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/edt_password" />-->
+    <!--  Icon: Hide password  -->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ic_hide_password"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="-40dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/hide_password_icon"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/edt_password"
+        app:layout_constraintStart_toEndOf="@+id/edt_password"
+        app:layout_constraintTop_toTopOf="@+id/edt_password" />
 
     <!--  Button Login  -->
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_login"
+        android:id="@+id/btn_register"
         android:layout_width="328dp"
         android:layout_height="44dp"
         android:layout_marginTop="20dp"
@@ -131,70 +150,31 @@
         android:fontFamily="@font/roboto_slab"
         android:paddingHorizontal="8dp"
         android:paddingVertical="4dp"
-        android:text="Login"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="16dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edt_password" />
-
-    <!--  Do you want to reset password?  -->
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_ask_reset_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:background="@null"
-        android:fontFamily="@font/roboto_slab"
-        android:text="@string/ask_reset_password"
-        android:textAlignment="center"
+        android:text="@string/register"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_login" />
+        app:layout_constraintTop_toBottomOf="@+id/edt_password" />
 
-    <!--  Don’t have an account?  -->
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/ll_ask_to_register"
+    <!--  Ask to back to the login fragment  -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_ask_back_to_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
-        android:gravity="bottom"
-        android:orientation="horizontal"
+        android:fontFamily="@font/roboto_slab"
+        android:text="@string/login"
+        android:background="@null"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_ask_reset_password">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:fontFamily="@font/roboto_slab"
-            android:text="@string/ask_having_account"
-            android:textAlignment="center"
-            android:textColor="#747474"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_nav_register"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:background="@null"
-            android:fontFamily="@font/roboto_slab"
-            android:text="@string/register"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        app:layout_constraintTop_toBottomOf="@+id/btn_register" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

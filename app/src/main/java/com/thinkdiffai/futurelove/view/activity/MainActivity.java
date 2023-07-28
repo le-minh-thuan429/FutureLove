@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.transparent));
         activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
 
+        // Get Check that a user log-in successfully or not
+        userLoggedIn = getIntent().getBooleanExtra("LOGIN_SUCCESS", false);
         if (!userLoggedIn) {
             Intent intent = new Intent(this, SignInSignUpActivity.class);
             startActivity(intent);

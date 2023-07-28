@@ -13,4 +13,5 @@
     <string name="ask_reset_password">Do you want to reset password?</string>
     <string name="ask_having_account">Don’t have an account?</string>
     <string name="register">Register</string>
+    <string name="login">Login</string>
 </resources>
