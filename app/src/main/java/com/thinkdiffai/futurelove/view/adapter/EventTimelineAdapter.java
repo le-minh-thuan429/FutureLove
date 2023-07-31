@@ -9,27 +9,30 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.thinkdiffai.futurelove.databinding.ItemTimelineEventBinding;
+import com.thinkdiffai.futurelove.model.DetailEvent;
+import com.thinkdiffai.futurelove.model.DetailEventList;
 import com.thinkdiffai.futurelove.model.EventHomeDto;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class EventTimelineAdapter extends RecyclerView.Adapter<EventTimelineAdapter.EventTimelineViewHolder> {
-    private List<EventHomeDto> eventList;
+    private List<DetailEvent> detailEventLists;
     Context context;
 
 
-    public void setData(List<EventHomeDto> eventList) {
-        this.eventList = eventList;
+    public void setData(List<DetailEvent> detailEventLists) {
+        this.detailEventLists = detailEventLists;
     }
 
-    public EventTimelineAdapter(List<EventHomeDto> eventList, IOnClickAddEventListener iOnClickAddEvent, Context context) {
-        this.eventList = eventList;
+    public EventTimelineAdapter(List<DetailEvent> eventList, IOnClickAddEventListener iOnClickAddEvent, Context context) {
+        this.detailEventLists = eventList;
         this.iOnClickAddEvent = iOnClickAddEvent;
         this.context = context;
     }
 
     public final IOnClickAddEventListener iOnClickAddEvent;
+
     public interface IOnClickAddEventListener {
         void onClickAddEvent(int id_event);
     }
@@ -44,17 +47,17 @@ public class EventTimelineAdapter extends RecyclerView.Adapter<EventTimelineAdap
 
     @Override
     public void onBindViewHolder(@NonNull EventTimelineViewHolder holder, int position) {
-        EventHomeDto event = eventList.get(position);
-        if (event==null)
+        DetailEvent event = detailEventLists.get(position);
+        if (event == null)
             return;
 
-        Picasso.get().load(event.getLink_da_swap()).into(holder.itemTimelineEventBinding.imgContent);
+        Picasso.get().load(event.getLinkDaSwap()).into(holder.itemTimelineEventBinding.imgContent);
 
-        int commaIndex = event.getReal_time().indexOf(",");
-        String date = event.getReal_time().substring(0, commaIndex);
-        holder.itemTimelineEventBinding.tvContent.setText(event.getNoi_dung_su_kien());
+        int commaIndex = event.getRealTime().indexOf(",");
+        String date = event.getRealTime().substring(0, commaIndex);
+        holder.itemTimelineEventBinding.tvContent.setText(event.getNoiDungSuKien());
         holder.itemTimelineEventBinding.tvDate.setText(date);
-       // Toast.makeText(context,  event.getId()+"", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(context,  event.getId()+"", Toast.LENGTH_SHORT).show();
         holder.itemTimelineEventBinding.btnAddEvnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,11 +69,12 @@ public class EventTimelineAdapter extends RecyclerView.Adapter<EventTimelineAdap
 
     @Override
     public int getItemCount() {
-        return null == eventList?0:eventList.size();
+        return null == detailEventLists ? 0 : detailEventLists.size();
     }
 
-    public static class EventTimelineViewHolder extends RecyclerView.ViewHolder{
+    public static class EventTimelineViewHolder extends RecyclerView.ViewHolder {
         private final ItemTimelineEventBinding itemTimelineEventBinding;
+
         public EventTimelineViewHolder(ItemTimelineEventBinding itemTimelineEventBinding) {
             super(itemTimelineEventBinding.getRoot());
             this.itemTimelineEventBinding = itemTimelineEventBinding;

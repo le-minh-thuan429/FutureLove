@@ -55,7 +55,7 @@ public interface ApiService {
     Call<DetailEventListParent> getEventListForHome(@Path("page") long id);
 
     @GET(Server.URI_LIST_EVENT_TIMELINE + "{id}")
-    Call<List<EventHomeDto>> getListEventDetail(@Path("id") long id);
+    Call<DetailEventList> getListEventDetail(@Path("id") long id);
 
     @GET(Server.URI_LIST_COMMENT_BY_EVENT_ID + "{id}")
     Call<List<Comment>> getListCommentByEventId(@Path("id") long id);

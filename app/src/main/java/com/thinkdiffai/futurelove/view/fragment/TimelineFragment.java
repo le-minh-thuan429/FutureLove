@@ -37,6 +37,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.thinkdiffai.futurelove.DbStorage.EventHistoryDb;
 import com.thinkdiffai.futurelove.databinding.FragmentTimelineBinding;
+import com.thinkdiffai.futurelove.model.DetailEvent;
+import com.thinkdiffai.futurelove.model.DetailEventList;
 import com.thinkdiffai.futurelove.modelfor4gdomain.NetworkModel;
 import com.thinkdiffai.futurelove.service.api.QueryValueCallback;
 import com.thinkdiffai.futurelove.service.api.RetrofitIp;
@@ -53,6 +55,7 @@ import com.thinkdiffai.futurelove.view.adapter.EventTimelineAdapter;
 import com.thinkdiffai.futurelove.view.adapter.PaginationTimelineAdapter;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,7 +74,7 @@ public class TimelineFragment extends Fragment {
     private FragmentTimelineBinding fragmentTimelineBinding;
     private MainActivity mainActivity;
     private KProgressHUD kProgressHUD;
-    private List<EventHomeDto> eventList;
+    private List<DetailEvent> detailEventList;
     private EventTimelineAdapter eventTimelineAdapter;
     private PaginationTimelineAdapter pageAdapter;
     SimpleDateFormat dateFormat;
@@ -88,6 +91,7 @@ public class TimelineFragment extends Fragment {
 
     // Store a local device ip address
     private String networkIp;
+    private List<EventHomeDto> eventListDto;
 
     @SuppressLint("SimpleDateFormat")
     @Nullable
@@ -169,9 +173,10 @@ public class TimelineFragment extends Fragment {
                                     kProgressHUD.dismiss();
 
                             }
-                            saveEventToStorage();
+//                            saveEventToStorage();
                         }
                     }
+
                     @Override
                     public void onApiCallFailed(Throwable t) {
                     }
@@ -224,7 +229,7 @@ public class TimelineFragment extends Fragment {
     private void saveEventToStorage() {
         int number = new Random().nextInt(3) + 2;
 
-        EventHistoryDb.getInstance(getActivity()).eventHistoryDao().insert(eventList.get(number));
+        EventHistoryDb.getInstance(getActivity()).eventHistoryDao().insert(eventListDto.get(number));
     }
 
     private void openStorage() {
@@ -348,9 +353,9 @@ public class TimelineFragment extends Fragment {
             mainActivity.eventSummaryCurrentId = new Random().nextInt(10);
         }
 //        initViewpagerEvent
-        eventList = new ArrayList<>();
+        detailEventList = new ArrayList<>();
 
-        eventTimelineAdapter = new EventTimelineAdapter(eventList, this::iOnClickAddEvent, getContext());
+        eventTimelineAdapter = new EventTimelineAdapter(detailEventList, this::iOnClickAddEvent, getContext());
         fragmentTimelineBinding.viewpagerTimeline.setAdapter(eventTimelineAdapter);
 
 //        initRcvComment
@@ -384,26 +389,26 @@ public class TimelineFragment extends Fragment {
             kProgressHUD.show();
         }
         ApiService apiService = RetrofitClient.getInstance(Server.DOMAIN1).getRetrofit().create(ApiService.class);
-        Call<List<EventHomeDto>> call = apiService.getListEventDetail(mainActivity.eventSummaryCurrentId);
+        Call<DetailEventList> call = apiService.getListEventDetail(mainActivity.eventSummaryCurrentId);
 
-        call.enqueue(new Callback<List<EventHomeDto>>() {
+        call.enqueue(new Callback<DetailEventList>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(Call<List<EventHomeDto>> call, Response<List<EventHomeDto>> response) {
+            public void onResponse(Call<DetailEventList> call, Response<DetailEventList> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<EventHomeDto> eventDtos = response.body();
-                    eventList = eventDtos;
-                    if (!eventDtos.isEmpty()) {
-                        eventTimelineAdapter.setData(eventDtos);
-                        eventTimelineAdapter.notifyDataSetChanged();
-                        urlImgFemale = eventDtos.get(1).getLink_nu_goc();
-                        urlImgMale = eventDtos.get(1).getLink_nam_goc();
-                        setTimeIncrease(eventDtos.get(0).getReal_time());
-                        displayPaginate(eventDtos.size());
-                        fragmentTimelineBinding.layoutFormComment.setVisibility(View.VISIBLE);
-                    }
+                    DetailEventList detailEventList = response.body();
+                    List<DetailEvent> detailEvents = detailEventList.getSukien();
 
-                    getDataComment();
+                    if (!detailEvents.isEmpty()) {
+                        eventTimelineAdapter.setData(detailEvents);
+                        eventTimelineAdapter.notifyDataSetChanged();
+                        urlImgFemale = detailEvents.get(1).getLinkNuGoc();
+                        urlImgMale = detailEvents.get(1).getLinkNamGoc();
+                        setTimeIncrease(detailEvents.get(0).getRealTime());
+                        displayPaginate(detailEvents.size());
+                        fragmentTimelineBinding.layoutFormComment.setVisibility(View.VISIBLE);
+                        getDataComment();
+                    }
                 }
                 if (kProgressHUD.isShowing()) {
                     kProgressHUD.dismiss();
@@ -411,7 +416,7 @@ public class TimelineFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<EventHomeDto>> call, Throwable t) {
+            public void onFailure(Call<DetailEventList> call, Throwable t) {
                 Toast.makeText(getActivity(), t.getMessage() + "", Toast.LENGTH_SHORT).show();
                 if (kProgressHUD.isShowing()) {
                     kProgressHUD.dismiss();
@@ -572,8 +577,8 @@ public class TimelineFragment extends Fragment {
 
 
     /*
-    * @Param callback: listen a returned value from calling api
-    * */
+     * @Param callback: listen a returned value from calling api
+     * */
     public void callDeviceIpAddress(QueryValueCallback callback) {
 //        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 //        if (wifiManager != null && wifiManager.isWifiEnabled()) {
@@ -591,7 +596,7 @@ public class TimelineFragment extends Fragment {
             @Override
             public void onResponse(Call<NetworkModel> call, Response<NetworkModel> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    NetworkModel networkModel= response.body();
+                    NetworkModel networkModel = response.body();
                     String returnIp = networkModel.getQuery();
                     callback.onQueryValueReceived(returnIp);
                 } else {
