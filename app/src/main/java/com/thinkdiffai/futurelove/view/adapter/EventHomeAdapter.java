@@ -11,27 +11,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.thinkdiffai.futurelove.databinding.ItemRcvHistoryEventBinding;
 import com.thinkdiffai.futurelove.model.Comon;
-import com.thinkdiffai.futurelove.model.EventHomeDto;
+import com.thinkdiffai.futurelove.model.DetailEvent;
 import com.squareup.picasso.Picasso;
+import com.thinkdiffai.futurelove.model.DetailEventList;
 
 import java.util.List;
-import java.util.Random;
+public class EventHomeAdapter extends RecyclerView.Adapter<EventHomeAdapter.EventHomeViewHolder> {
 
-public class EventHomeAdapter extends  RecyclerView.Adapter<EventHomeAdapter.EventHomeViewHolder>{
-
-    private List<List<EventHomeDto>> eventList;
+    private List<DetailEventList> eventList;
     public final IOnClickItemListener iOnClickItem;
 
-    public void setData(List<List<EventHomeDto>> eventList) {
+    public void setData(List<DetailEventList> eventList) {
         this.eventList = eventList;
     }
 
     Context context;
-    public EventHomeAdapter(List<List<EventHomeDto>> eventList, IOnClickItemListener iOnClickItem, Context context) {
+
+    public EventHomeAdapter(List<DetailEventList> eventList, IOnClickItemListener iOnClickItem, Context context) {
         this.eventList = eventList;
         this.iOnClickItem = iOnClickItem;
         this.context = context;
     }
+
     public interface IOnClickItemListener {
         void onClickItem(long id);
     }
@@ -46,40 +47,39 @@ public class EventHomeAdapter extends  RecyclerView.Adapter<EventHomeAdapter.Eve
 
     @Override
     public void onBindViewHolder(@NonNull EventHomeViewHolder holder, int position) {
-        List<EventHomeDto> events = eventList.get(position);
-        if (events==null||events.isEmpty())
+        DetailEventList eventsList = eventList.get(position);
+        if (eventsList.getSukien().size() == 0)
             return;
 
-//        random tu 2-4
-        int number = new Random().nextInt(3)+2;
-        if (events.get(number)==null)
+//      Get the first element of each detail events list
+        List<DetailEvent> detailEvents = eventsList.getSukien();
+        if (detailEvents.get(0) == null)
             return;
 
 
         Glide.with(holder.itemView.getContext())
-                .load(events.get(number).getLink_nam_goc())
+                .load(detailEvents.get(0).getLinkNamGoc())
                 .into(holder.itemRcvHistoryEventBinding.imgPerson1);
 
         Glide.with(holder.itemView.getContext())
-                .load(events.get(number).getLink_nu_goc())
+                .load(detailEvents.get(0).getLinkNuGoc())
                 .into(holder.itemRcvHistoryEventBinding.imgPerson2);
-        Picasso.get().load(events.get(number).getLink_da_swap()).into(holder.itemRcvHistoryEventBinding.imgContent);
+        Picasso.get().load(detailEvents.get(0).getLinkDaSwap()).into(holder.itemRcvHistoryEventBinding.imgContent);
 
-        int commaIndex = events.get(number).getReal_time().indexOf(",");
-        String date = events.get(number).getReal_time().substring(0, commaIndex);
-        holder.itemRcvHistoryEventBinding.tvContent.setText(events.get(number).getTen_su_kien());
+        int commaIndex = detailEvents.get(0).getRealTime().indexOf(",");
+        String date = detailEvents.get(0).getRealTime().substring(0, commaIndex);
+        holder.itemRcvHistoryEventBinding.tvContent.setText(detailEvents.get(0).getTenSuKien());
         holder.itemRcvHistoryEventBinding.tvDate.setText(date);
         //Toast.makeText(context,  events.get(number).getTom_Luoc_Text(), Toast.LENGTH_SHORT).show();
 
         holder.itemRcvHistoryEventBinding.layoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                iOnClickItem.onClickItem(events.get(number).getId_toan_bo_su_kien());
-                Comon.link_nam_chua_swap=events.get(number).getLink_nam_chua_swap();
-                Comon.link_nam_goc=events.get(number).getLink_nam_goc();
-                Comon.link_nu_chua_swap=events.get(number).getLink_nu_chua_swap();
-                Comon.link_nu_goc=events.get(number).getLink_nu_goc();
-                Comon.tom_Luoc_Text=events.get(number).getTom_Luoc_Text();
+                iOnClickItem.onClickItem(detailEvents.get(0).getIdToanBoSuKien());
+                Comon.link_nam_chua_swap = detailEvents.get(0).getLinkNamChuaSwap();
+                Comon.link_nam_goc = detailEvents.get(0).getLinkNamGoc();
+                Comon.link_nu_chua_swap = detailEvents.get(0).getLinkNuChuaSwap();
+                Comon.link_nu_goc = detailEvents.get(0).getLinkNuGoc();
             }
         });
 
@@ -87,10 +87,12 @@ public class EventHomeAdapter extends  RecyclerView.Adapter<EventHomeAdapter.Eve
 
     @Override
     public int getItemCount() {
-        return null == eventList?0:eventList.size();
+        return null == eventList ? 0 : eventList.size();
     }
-    public static class EventHomeViewHolder extends RecyclerView.ViewHolder{
+
+    public static class EventHomeViewHolder extends RecyclerView.ViewHolder {
         private final ItemRcvHistoryEventBinding itemRcvHistoryEventBinding;
+
         public EventHomeViewHolder(ItemRcvHistoryEventBinding itemRcvHistoryEventBinding) {
             super(itemRcvHistoryEventBinding.getRoot());
             this.itemRcvHistoryEventBinding = itemRcvHistoryEventBinding;

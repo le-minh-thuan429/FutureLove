@@ -15,7 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.thinkdiffai.futurelove.databinding.FragmentHomeBinding;
-import com.thinkdiffai.futurelove.model.EventHomeDto;
+import com.thinkdiffai.futurelove.model.DetailEventList;
+import com.thinkdiffai.futurelove.model.DetailEventListParent;
 import com.thinkdiffai.futurelove.service.api.ApiService;
 import com.thinkdiffai.futurelove.service.api.RetrofitClient;
 import com.thinkdiffai.futurelove.service.api.Server;
@@ -37,14 +38,12 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding fragmentHomeBinding;
     private MainActivity mainActivity;
     private EventHomeAdapter eventHomeAdapter;
-    private List<List<EventHomeDto>> eventList;
+    private List<DetailEventList> eventList;
     private LinearLayoutManager linearLayoutManager;
-
     private boolean isLoading;
     private boolean isLastPage;
-    private int currentPage =1;
-    List<List<EventHomeDto>> eventHomeDtoList;
-
+    private int currentPage = 1;
+    List<DetailEventList> eventHomeDtoList;
 
 
     @Nullable
@@ -62,7 +61,7 @@ public class HomeFragment extends Fragment {
             getData(currentPage);
             initListener();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             Log.e("ExceptionRuntime", e.toString());
         }
 
@@ -92,7 +91,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void ReloadItem() {
-                currentPage=1;
+                currentPage = 1;
                 getData(currentPage);
             }
         });
@@ -104,15 +103,15 @@ public class HomeFragment extends Fragment {
 
     private void initUi() {
         eventList = new ArrayList<>();
-         linearLayoutManager = new LinearLayoutManager(getActivity(), GridLayoutManager.VERTICAL, false);
+        linearLayoutManager = new LinearLayoutManager(getActivity(), GridLayoutManager.VERTICAL, false);
         fragmentHomeBinding.rcvHome.setLayoutManager(linearLayoutManager);
-        eventHomeAdapter = new EventHomeAdapter(eventList ,this::goToEventDetail,getContext());
+        eventHomeAdapter = new EventHomeAdapter(eventList, this::goToEventDetail, getContext());
         fragmentHomeBinding.rcvHome.setAdapter(eventHomeAdapter);
     }
 
     private void goToEventDetail(long id) {
-            mainActivity.eventSummaryCurrentId = id;
-            mainActivity.setCurrentPage(4);
+        mainActivity.eventSummaryCurrentId = id;
+        mainActivity.setCurrentPage(4);
 
     }
 
@@ -120,38 +119,38 @@ public class HomeFragment extends Fragment {
         if (!kProgressHUD.isShowing()) {
             kProgressHUD.show();
         }
-        if (currentPage==1){
+        if (currentPage == 1) {
             eventHomeDtoList.clear();
         }
         ApiService apiService = RetrofitClient.getInstance(Server.DOMAIN2).getRetrofit().create(ApiService.class);
-        Call<List<List<EventHomeDto>>> call = apiService.getListAllEventHome(currentPage);
-        call.enqueue(new Callback<List<List<EventHomeDto>>>() {
+        Call<DetailEventListParent> call = apiService.getEventListForHome(currentPage);
+        call.enqueue(new Callback<DetailEventListParent>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(Call<List<List<EventHomeDto>>> call, Response<List<List<EventHomeDto>>> response) {
+            public void onResponse(Call<DetailEventListParent> call, Response<DetailEventListParent> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<List<EventHomeDto>> eventHomeDtos = response.body();
-                        if (!eventHomeDtos.isEmpty()){
-                            eventHomeDtoList.addAll(eventHomeDtos);
-                            eventHomeAdapter.setData(eventHomeDtoList);
-                            eventHomeAdapter.notifyDataSetChanged();
-                        }
-
+                    DetailEventListParent detailEventListParent = response.body();
+                    List<DetailEventList> detailEventLists = detailEventListParent.getListSukien();
+                    if (!detailEventLists.isEmpty()){
+                        eventHomeAdapter.setData(detailEventLists);
+                        eventHomeAdapter.notifyDataSetChanged();
+                    }
                 }
                 if (kProgressHUD.isShowing()) {
                     kProgressHUD.dismiss();
                 }
-                isLoading=false;
+
+                isLoading = false;
             }
 
             @Override
-            public void onFailure(Call<List<List<EventHomeDto>>> call, Throwable t) {
+            public void onFailure(Call<DetailEventListParent> call, Throwable t) {
                 Toast.makeText(getActivity(), t.getMessage() + "", Toast.LENGTH_SHORT).show();
                 if (kProgressHUD.isShowing()) {
                     kProgressHUD.dismiss();
                     Log.e("MainActivityLog", t.getMessage().toString());
                 }
-                isLoading=false;
+                isLoading = false;
             }
         });
     }

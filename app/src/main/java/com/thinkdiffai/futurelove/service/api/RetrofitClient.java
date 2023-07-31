@@ -17,9 +17,6 @@ public class RetrofitClient {
     private static RetrofitClient instance;
     private static Retrofit retrofit;
 
-    private String ip;
-
-
 
     private RetrofitClient(String domain) {
 //        interceptor.setLevel(Interceptor.Level.BODY);

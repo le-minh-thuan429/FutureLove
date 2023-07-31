@@ -2,7 +2,9 @@ package com.thinkdiffai.futurelove.service.api;
 
 import com.thinkdiffai.futurelove.model.Comment;
 import com.thinkdiffai.futurelove.model.CommentDto;
+import com.thinkdiffai.futurelove.model.DetailEventListParent;
 import com.thinkdiffai.futurelove.model.EventHomeDto;
+import com.thinkdiffai.futurelove.model.DetailEventList;
 import com.thinkdiffai.futurelove.model.ResponsePairingDto;
 import com.thinkdiffai.futurelove.modelfor4gdomain.NetworkModel;
 
@@ -48,6 +50,9 @@ public interface ApiService {
 
     @GET(Server.URI_LIST_EVENT_HOME + "{page}")
     Call<List<List<EventHomeDto>>> getListAllEventHome(@Path("page") long id);
+
+    @GET(Server.URI_LIST_EVENT_HOME + "{page}")
+    Call<DetailEventListParent> getEventListForHome(@Path("page") long id);
 
     @GET(Server.URI_LIST_EVENT_TIMELINE + "{id}")
     Call<List<EventHomeDto>> getListEventDetail(@Path("id") long id);
