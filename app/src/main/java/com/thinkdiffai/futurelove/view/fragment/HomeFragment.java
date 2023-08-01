@@ -53,7 +53,6 @@ public class HomeFragment extends Fragment {
         mainActivity = (MainActivity) getActivity();
         kProgressHUD = mainActivity.createHud();
 
-
 //        checkClickSetImageMale =  true;
         try {
             initUi();
@@ -99,6 +98,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void initUi() {
+        //Reset all events
+        mainActivity.soThuTuSuKien = 0;
         eventList = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getActivity(), GridLayoutManager.VERTICAL, false);
         fragmentHomeBinding.rcvHome.setLayoutManager(linearLayoutManager);

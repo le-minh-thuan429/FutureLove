@@ -92,6 +92,7 @@ public interface ApiService {
                                  @Field("noi_dung_cmt") String content,
                                  @Field("device_cmt") String device,
                                  @Field("id_toan_bo_su_kien") String idSummary,
+                                 @Field("so_thu_tu_su_kien") int soThuTuSuKien,
                                  @Field("ipComment") String ip,
                                  @Field("imageattach") String imagEattach);
 

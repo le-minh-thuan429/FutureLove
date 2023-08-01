@@ -68,6 +68,7 @@ import io.github.rupinderjeet.kprogresshud.KProgressHUD;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Field;
 
 public class TimelineFragment extends Fragment {
     private static final int REQUEST_CODE_PERMISSIONS_STORAGE = 101;
@@ -122,6 +123,8 @@ public class TimelineFragment extends Fragment {
         fragmentTimelineBinding.viewpagerTimeline.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
+                iOnScrollEventList(position);
+                getDataComment(position, mainActivity.eventSummaryCurrentId);
                 linearLayoutManager.scrollToPosition(position);
                 pageAdapter.setCurrentPosition(position);
                 pageAdapter.notifyItemChanged(position);
@@ -129,8 +132,6 @@ public class TimelineFragment extends Fragment {
                 pageAdapter.notifyItemChanged(position);
                 pageAdapter.notifyItemChanged(position + 1);
                 pageAdapter.notifyItemChanged(position - 2);
-                iOnScrollEventList(position);
-                getDataComment(position, mainActivity.eventSummaryCurrentId);
             }
         });
 
@@ -302,13 +303,16 @@ public class TimelineFragment extends Fragment {
         }
         String deviceName = Build.MANUFACTURER + Build.MODEL;
 
+
         Comment comment = new Comment(
-                deviceName,
-                ipAddress,
                 1,
+                content,
+                deviceName,
                 mainActivity.eventSummaryCurrentId,
-                urlImageComment,
-                content);
+                mainActivity.soThuTuSuKien,
+                ipAddress,
+                urlImageComment
+        );
 
 //        Map<String, String> headers = new HashMap<>();
 //        headers.put("noi_dung_cmt", comment.getNoi_dung_cmt());
@@ -316,22 +320,34 @@ public class TimelineFragment extends Fragment {
 //        headers.put("id_toan_bo_su_kien", String.valueOf(comment.getId_toan_bo_su_kien()));
 //        headers.put("ipComment", comment.getDia_chi_ip());
 //        headers.put("imageattach", comment.getImageattach());
+/*
+        @Field("id_user") int idUser,
+        @Field("noi_dung_cmt") String content,
+        @Field("device_cmt") String device,
+        @Field("id_toan_bo_su_kien") String idSummary,
+        @Field("so_thu_tu_su_kien") int soThuTuSuKien,
+        @Field("ipComment") String ip,
+        @Field("imageattach") String imagEattach)
+
+        */
 
 
         ApiService apiService = RetrofitClient.getInstance(Server.DOMAIN2).getRetrofit().create(ApiService.class);
         Call<Object> call = apiService.postDataComment(
-                1,
+                comment.getIdUser(),
                 comment.getNoiDungCmt(),
                 comment.getDeviceCmt(),
                 String.valueOf(comment.getIdToanBoSuKien()),
+                comment.getSoThuTuSuKien(),
                 comment.getDiaChiIp(),
-                comment.getImageattach());
+                comment.getImageattach()
+        );
         call.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
                 if (response.isSuccessful() && response.body() != null) {
 //                    xu ly sau khi comment
-//                    getDataComment();
+                    getDataComment(mainActivity.soThuTuSuKien, mainActivity.eventSummaryCurrentId);
                 }
                 if (kProgressHUD.isShowing()) {
                     kProgressHUD.dismiss();
@@ -375,6 +391,7 @@ public class TimelineFragment extends Fragment {
     private void iOnScrollEventList(int soThuTuSuKien) {
         mainActivity.soThuTuSuKien = soThuTuSuKien;
     }
+
     private void iOnClickAddEvent(int id_event) {
         Intent intent = new Intent(getActivity(), AddEventActivity.class);
         // intent.putExtra("id_summary_event", id_summary_event);
@@ -416,7 +433,7 @@ public class TimelineFragment extends Fragment {
                         displayPaginate(detailEvents.size());
                         fragmentTimelineBinding.layoutFormComment.setVisibility(View.VISIBLE);
                         // call API for comments
-                        getDataComment(0, mainActivity.eventSummaryCurrentId);
+                        getDataComment(mainActivity.soThuTuSuKien, mainActivity.eventSummaryCurrentId);
                     }
                 }
                 if (kProgressHUD.isShowing()) {
@@ -475,6 +492,7 @@ public class TimelineFragment extends Fragment {
 
             }
         });
+        commentsForAdapter.clear();
     }
 
     private void setTimeIncrease(String date) {
