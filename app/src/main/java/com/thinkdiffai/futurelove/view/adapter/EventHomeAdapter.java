@@ -34,7 +34,7 @@ public class EventHomeAdapter extends RecyclerView.Adapter<EventHomeAdapter.Even
     }
 
     public interface IOnClickItemListener {
-        void onClickItem(long id);
+        void onClickItem(int idToanBoSuKien);
     }
 
     @NonNull
@@ -75,6 +75,7 @@ public class EventHomeAdapter extends RecyclerView.Adapter<EventHomeAdapter.Even
         holder.itemRcvHistoryEventBinding.layoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 iOnClickItem.onClickItem(detailEvents.get(0).getIdToanBoSuKien());
                 Comon.link_nam_chua_swap = detailEvents.get(0).getLinkNamChuaSwap();
                 Comon.link_nam_goc = detailEvents.get(0).getLinkNamGoc();

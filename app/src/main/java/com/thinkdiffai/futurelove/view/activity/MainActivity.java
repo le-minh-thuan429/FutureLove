@@ -20,12 +20,9 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding activityMainBinding;
     private MainViewPagerAdapter mainViewPagerAdapter;
     private KProgressHUD kProgressHUD;
-    public long eventSummaryCurrentId = -1;
+    public int eventSummaryCurrentId = -1;
 
-
-
-
-
+    public int soThuTuSuKien = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +35,7 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.viewpager2.setAdapter(mainViewPagerAdapter);
         onPageChangeViewPager();
         onClickBottomNavigation();
-
     }
-
     public void onPageChangeViewPager() {
         activityMainBinding.viewpager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -80,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-
                 if (id == R.id.nav_home)
                     activityMainBinding.viewpager2.setCurrentItem(0);
                 else if (id == R.id.nav_comment)

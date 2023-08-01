@@ -1,25 +1,18 @@
-package com.thinkdiffai.futurelove.model;
+package com.thinkdiffai.futurelove.model.comment;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class CommentDto {
+public class CommentList {
+
+    @SerializedName("comment")
     private List<Comment> comment;
+    @SerializedName("sophantu")
     private int sophantu;
-    private float sotrang;
+    @SerializedName("sotrang")
+    private double sotrang;
 
-
-    public CommentDto(List<Comment> comment) {
-        this.comment = comment;
-    }
-
-    public CommentDto() {
-    }
-
-    public CommentDto(List<Comment> comment, int sophantu, int sotrang) {
-        this.comment = comment;
-        this.sophantu = sophantu;
-        this.sotrang = sotrang;
-    }
 
     public List<Comment> getComment() {
         return comment;
@@ -37,11 +30,11 @@ public class CommentDto {
         this.sophantu = sophantu;
     }
 
-    public float getSotrang() {
+    public double getSotrang() {
         return sotrang;
     }
 
-    public void setSotrang(int sotrang) {
+    public void setSotrang(double sotrang) {
         this.sotrang = sotrang;
     }
 }

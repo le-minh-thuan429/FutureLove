@@ -30,7 +30,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
     public interface IOnClickItemListener {
 
-        void onClickItem(long id);
+        void onClickItem(int id);
         void onClickDelete(int orderNumber_id);
 
     }

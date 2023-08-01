@@ -20,21 +20,26 @@ public class EventTimelineAdapter extends RecyclerView.Adapter<EventTimelineAdap
     private List<DetailEvent> detailEventLists;
     Context context;
 
-
     public void setData(List<DetailEvent> detailEventLists) {
         this.detailEventLists = detailEventLists;
     }
 
-    public EventTimelineAdapter(List<DetailEvent> eventList, IOnClickAddEventListener iOnClickAddEvent, Context context) {
+    public EventTimelineAdapter(List<DetailEvent> eventList, IOnClickAddEventListener iOnClickAddEvent, IOnScrollEventList iOnScrollEventList, Context context) {
         this.detailEventLists = eventList;
         this.iOnClickAddEvent = iOnClickAddEvent;
+        this.iOnScrollEventList = iOnScrollEventList;
         this.context = context;
     }
 
     public final IOnClickAddEventListener iOnClickAddEvent;
-
+    public final IOnScrollEventList iOnScrollEventList;
     public interface IOnClickAddEventListener {
         void onClickAddEvent(int id_event);
+    }
+
+    // Interface for callback soThuTuSuKien where it scrolls to
+    public interface IOnScrollEventList {
+        void onScrollPosition(int soThuTuSuKien);
     }
 
     @NonNull
@@ -64,7 +69,6 @@ public class EventTimelineAdapter extends RecyclerView.Adapter<EventTimelineAdap
                 iOnClickAddEvent.onClickAddEvent(event.getId());
             }
         });
-
     }
 
     @Override

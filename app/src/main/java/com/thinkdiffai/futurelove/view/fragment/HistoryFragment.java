@@ -72,7 +72,7 @@ public class HistoryFragment extends Fragment {
         fragmentHistoryBinding.rcvHistory.setLayoutManager(linearLayoutManager);
         historyAdapter = new HistoryAdapter(eventHomeDtoList, new HistoryAdapter.IOnClickItemListener() {
             @Override
-            public void onClickItem(long id) {
+            public void onClickItem(int id) {
                 mainActivity.eventSummaryCurrentId = id;
                 mainActivity.setCurrentPage(3);
             }

@@ -39,12 +39,14 @@ import com.thinkdiffai.futurelove.DbStorage.EventHistoryDb;
 import com.thinkdiffai.futurelove.databinding.FragmentTimelineBinding;
 import com.thinkdiffai.futurelove.model.DetailEvent;
 import com.thinkdiffai.futurelove.model.DetailEventList;
+import com.thinkdiffai.futurelove.model.comment.eacheventcomment.EachEventCommentsList;
+import com.thinkdiffai.futurelove.model.EventHomeDto;
+import com.thinkdiffai.futurelove.model.comment.Comment;
+import com.thinkdiffai.futurelove.model.comment.CommentList;
 import com.thinkdiffai.futurelove.modelfor4gdomain.NetworkModel;
 import com.thinkdiffai.futurelove.service.api.QueryValueCallback;
 import com.thinkdiffai.futurelove.service.api.RetrofitIp;
 import com.thinkdiffai.futurelove.util.Util;
-import com.thinkdiffai.futurelove.model.Comment;
-import com.thinkdiffai.futurelove.model.EventHomeDto;
 import com.thinkdiffai.futurelove.service.api.ApiService;
 import com.thinkdiffai.futurelove.service.api.RetrofitClient;
 import com.thinkdiffai.futurelove.service.api.Server;
@@ -55,7 +57,6 @@ import com.thinkdiffai.futurelove.view.adapter.EventTimelineAdapter;
 import com.thinkdiffai.futurelove.view.adapter.PaginationTimelineAdapter;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -80,7 +81,11 @@ public class TimelineFragment extends Fragment {
     SimpleDateFormat dateFormat;
     private LinearLayoutManager linearLayoutManager;
     private CommentAdapter commentAdapter;
-    private List<Comment> commentList;
+
+    // this model is used to serialize with api callback model
+    private CommentList pageCommentList;
+
+    private List<Comment> commentsForAdapter;
     private long elapsedTime;
     Handler handler;
     Runnable runnable;
@@ -124,6 +129,8 @@ public class TimelineFragment extends Fragment {
                 pageAdapter.notifyItemChanged(position);
                 pageAdapter.notifyItemChanged(position + 1);
                 pageAdapter.notifyItemChanged(position - 2);
+                iOnScrollEventList(position);
+                getDataComment(position, mainActivity.eventSummaryCurrentId);
             }
         });
 
@@ -218,7 +225,6 @@ public class TimelineFragment extends Fragment {
         fragmentTimelineBinding.btnFloating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 String url = Server.URI_LINK_WEB_DETAIL + mainActivity.eventSummaryCurrentId; // Liên kết web mà bạn muốn mở
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(intent);
@@ -315,17 +321,17 @@ public class TimelineFragment extends Fragment {
         ApiService apiService = RetrofitClient.getInstance(Server.DOMAIN2).getRetrofit().create(ApiService.class);
         Call<Object> call = apiService.postDataComment(
                 1,
-                comment.getNoi_dung_cmt(),
-                comment.getDevice_cmt(),
-                String.valueOf(comment.getId_toan_bo_su_kien()),
-                comment.getDia_chi_ip(),
+                comment.getNoiDungCmt(),
+                comment.getDeviceCmt(),
+                String.valueOf(comment.getIdToanBoSuKien()),
+                comment.getDiaChiIp(),
                 comment.getImageattach());
         call.enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
                 if (response.isSuccessful() && response.body() != null) {
 //                    xu ly sau khi comment
-                    getDataComment();
+//                    getDataComment();
                 }
                 if (kProgressHUD.isShowing()) {
                     kProgressHUD.dismiss();
@@ -354,19 +360,21 @@ public class TimelineFragment extends Fragment {
         }
 //        initViewpagerEvent
         detailEventList = new ArrayList<>();
-
-        eventTimelineAdapter = new EventTimelineAdapter(detailEventList, this::iOnClickAddEvent, getContext());
+        eventTimelineAdapter = new EventTimelineAdapter(detailEventList, this::iOnClickAddEvent, this::iOnScrollEventList, getContext());
         fragmentTimelineBinding.viewpagerTimeline.setAdapter(eventTimelineAdapter);
 
 //        initRcvComment
-        commentList = new ArrayList<>();
+        commentsForAdapter = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), GridLayoutManager.VERTICAL, false);
         fragmentTimelineBinding.rcvComment.setLayoutManager(linearLayoutManager);
-        commentAdapter = new CommentAdapter(commentList, this::iOnClickItemComment);
+        commentAdapter = new CommentAdapter(commentsForAdapter, this::iOnClickItemComment);
         fragmentTimelineBinding.rcvComment.setAdapter(commentAdapter);
 
     }
 
+    private void iOnScrollEventList(int soThuTuSuKien) {
+        mainActivity.soThuTuSuKien = soThuTuSuKien;
+    }
     private void iOnClickAddEvent(int id_event) {
         Intent intent = new Intent(getActivity(), AddEventActivity.class);
         // intent.putExtra("id_summary_event", id_summary_event);
@@ -381,7 +389,7 @@ public class TimelineFragment extends Fragment {
 
     }
 
-    private void iOnClickItemComment(long idEventSummary) {
+    private void iOnClickItemComment(long idToanBoSuKien, double soThuTuSuKienCon) {
     }
 
     private void getDataEvent() {
@@ -402,12 +410,13 @@ public class TimelineFragment extends Fragment {
                     if (!detailEvents.isEmpty()) {
                         eventTimelineAdapter.setData(detailEvents);
                         eventTimelineAdapter.notifyDataSetChanged();
-                        urlImgFemale = detailEvents.get(1).getLinkNuGoc();
-                        urlImgMale = detailEvents.get(1).getLinkNamGoc();
+                        urlImgFemale = detailEvents.get(0).getLinkNuGoc();
+                        urlImgMale = detailEvents.get(0).getLinkNamGoc();
                         setTimeIncrease(detailEvents.get(0).getRealTime());
                         displayPaginate(detailEvents.size());
                         fragmentTimelineBinding.layoutFormComment.setVisibility(View.VISIBLE);
-                        getDataComment();
+                        // call API for comments
+                        getDataComment(0, mainActivity.eventSummaryCurrentId);
                     }
                 }
                 if (kProgressHUD.isShowing()) {
@@ -420,32 +429,35 @@ public class TimelineFragment extends Fragment {
                 Toast.makeText(getActivity(), t.getMessage() + "", Toast.LENGTH_SHORT).show();
                 if (kProgressHUD.isShowing()) {
                     kProgressHUD.dismiss();
-                    Log.e("MainActivityLog", t.getMessage().toString());
+                    Log.e("MainActivityLog", t.getMessage());
 
                 }
             }
         });
     }
 
-    private void getDataComment() {
-        commentList.clear();
-        if (!kProgressHUD.isShowing()) {
-            kProgressHUD.show();
-        }
+    // Get comments list of each event
+    @SuppressLint("NotifyDataSetChanged")
+    private void getDataComment(int soThuTuSuKien, int idToanBoSuKien) {
+        commentsForAdapter.clear();
+//        if (!kProgressHUD.isShowing()) {
+//            kProgressHUD.show();
+//        }
 
         ApiService apiService = RetrofitClient.getInstance(Server.DOMAIN2).getRetrofit().create(ApiService.class);
-        Call<List<Comment>> call = apiService.getListCommentByEventId(mainActivity.eventSummaryCurrentId);
-        call.enqueue(new Callback<List<Comment>>() {
+        Call<EachEventCommentsList> call = apiService.getListCommentByEventId(soThuTuSuKien, idToanBoSuKien);
+
+        call.enqueue(new Callback<EachEventCommentsList>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+            public void onResponse(Call<EachEventCommentsList> call, Response<EachEventCommentsList> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Comment> comments = response.body();
-                    if (!comments.isEmpty()) {
-                        commentList.addAll(comments);
-                        commentAdapter.setData(commentList, urlImgMale, urlImgFemale);
+                    EachEventCommentsList eachEventCommentsList = response.body();
+                    List<Comment> _comments = eachEventCommentsList.getEachEventCommentList();
+                    if (!_comments.isEmpty()) {
+                        commentAdapter.setData(_comments, urlImgMale, urlImgFemale);
+                        commentAdapter.notifyDataSetChanged();
                     }
-                    commentAdapter.notifyDataSetChanged();
 
                     if (kProgressHUD.isShowing()) {
                         kProgressHUD.dismiss();
@@ -455,16 +467,14 @@ public class TimelineFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<Comment>> call, Throwable t) {
+            public void onFailure(@NonNull Call<EachEventCommentsList> call, @NonNull Throwable t) {
                 if (kProgressHUD.isShowing()) {
                     kProgressHUD.dismiss();
                 }
-                Log.e("TimelineLog", t.getMessage().toString());
+                Log.e("TimelineLog", t.getMessage());
 
             }
         });
-        commentAdapter.notifyDataSetChanged();
-
     }
 
     private void setTimeIncrease(String date) {
@@ -614,9 +624,8 @@ public class TimelineFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        commentList.clear();
+        commentsForAdapter.clear();
         getDataEvent();
-
     }
 
 

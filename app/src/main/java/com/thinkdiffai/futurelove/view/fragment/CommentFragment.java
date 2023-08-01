@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.thinkdiffai.futurelove.databinding.FragmentCommentBinding;
-import com.thinkdiffai.futurelove.model.Comment;
-import com.thinkdiffai.futurelove.model.CommentDto;
+import com.thinkdiffai.futurelove.model.comment.CommentList;
+import com.thinkdiffai.futurelove.model.comment.Comment;
 import com.thinkdiffai.futurelove.service.api.ApiService;
 import com.thinkdiffai.futurelove.service.api.RetrofitClient;
 import com.thinkdiffai.futurelove.service.api.Server;
@@ -39,10 +39,13 @@ public class CommentFragment extends Fragment {
     private FragmentCommentBinding fragmentCommentBinding;
     private MainActivity mainActivity;
     private KProgressHUD kProgressHUD;
-    private List<Comment> commentNewtList;
-    private List<Comment> commentList;
+
+    private List<Comment> commentsForAdapter;
     private CommentAdapter commentAdapter;
 
+    private int numberOfElements;
+
+    private double pageNumber;
     private int currentPage = 1;
     private LinearLayoutManager linearLayoutManager;
     private boolean isLoading;
@@ -94,8 +97,8 @@ public class CommentFragment extends Fragment {
 
             @Override
             public void ReloadItem() {
-                currentPage =1;
-                    getCommentNew();
+                currentPage = 1;
+                getCommentNew();
             }
 
         });
@@ -146,34 +149,35 @@ public class CommentFragment extends Fragment {
         if (!kProgressHUD.isShowing()) {
             kProgressHUD.show();
         }
-        if (currentPage==1){
-            commentNewtList.clear();
+        if (currentPage == 1) {
+            commentsForAdapter.clear();
         }
         ApiService apiService = RetrofitClient.getInstance(Server.DOMAIN2).getRetrofit().create(ApiService.class);
-        Call<CommentDto> call = apiService.getListCommentNew(currentPage);
-        call.enqueue(new Callback<CommentDto>() {
+        Call<CommentList> call = apiService.getListCommentNew(currentPage);
+        call.enqueue(new Callback<CommentList>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(@NonNull Call<CommentDto> call, @NonNull Response<CommentDto> response) {
+            public void onResponse(@NonNull Call<CommentList> call, @NonNull Response<CommentList> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    CommentDto comments = response.body();
-                    if (comments.getComment().size() > 0) {
-                        commentNewtList.addAll(comments.getComment());
-                        commentAdapter.setData(commentNewtList);
+                    CommentList _commentList = response.body();
+                    commentsForAdapter = _commentList.getComment();
+                    numberOfElements = _commentList.getSophantu();
+                    pageNumber = _commentList.getSotrang();
+
+                    if (!commentsForAdapter.isEmpty()) {
+                        commentAdapter.setData(commentsForAdapter);
                         commentAdapter.notifyDataSetChanged();
-
                     }
-                    isLoading=false;
-                    if (kProgressHUD.isShowing()) {
-                        kProgressHUD.dismiss();
-                    }
-
+                }
+                isLoading = false;
+                if (kProgressHUD.isShowing()) {
+                    kProgressHUD.dismiss();
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<CommentDto> call, @NonNull Throwable t) {
-                isLoading=false;
+            public void onFailure(@NonNull Call<CommentList> call, @NonNull Throwable t) {
+                isLoading = false;
                 if (kProgressHUD.isShowing()) {
                     kProgressHUD.dismiss();
 
@@ -185,15 +189,16 @@ public class CommentFragment extends Fragment {
 
 
     private void initUi() {
-        commentNewtList = new ArrayList<>();
+        commentsForAdapter = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getActivity(), GridLayoutManager.VERTICAL, false);
         fragmentCommentBinding.rcvComment.setLayoutManager(linearLayoutManager);
-        commentAdapter = new CommentAdapter(commentNewtList, this::iOnClickItem);
+        commentAdapter = new CommentAdapter(commentsForAdapter, this::iOnClickItem);
         fragmentCommentBinding.rcvComment.setAdapter(commentAdapter);
     }
 
-    private void iOnClickItem(long idEventSummary) {
-        mainActivity.eventSummaryCurrentId = idEventSummary;
+    private void iOnClickItem(int idToanBoSuKien, int soThuTuSuKienCon) {
+        mainActivity.eventSummaryCurrentId = idToanBoSuKien;
+        mainActivity.soThuTuSuKien = soThuTuSuKienCon;
         mainActivity.setCurrentPage(4);
     }
 }

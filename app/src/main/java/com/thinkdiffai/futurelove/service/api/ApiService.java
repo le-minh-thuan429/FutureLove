@@ -1,11 +1,11 @@
 package com.thinkdiffai.futurelove.service.api;
 
-import com.thinkdiffai.futurelove.model.Comment;
-import com.thinkdiffai.futurelove.model.CommentDto;
 import com.thinkdiffai.futurelove.model.DetailEventListParent;
+import com.thinkdiffai.futurelove.model.comment.eacheventcomment.EachEventCommentsList;
 import com.thinkdiffai.futurelove.model.EventHomeDto;
 import com.thinkdiffai.futurelove.model.DetailEventList;
 import com.thinkdiffai.futurelove.model.ResponsePairingDto;
+import com.thinkdiffai.futurelove.model.comment.CommentList;
 import com.thinkdiffai.futurelove.modelfor4gdomain.NetworkModel;
 
 import java.util.List;
@@ -19,6 +19,7 @@ import retrofit2.http.GET;
 import retrofit2.http.HeaderMap;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ApiService {
 //    Gson gson = new GsonBuilder()
@@ -57,11 +58,16 @@ public interface ApiService {
     @GET(Server.URI_LIST_EVENT_TIMELINE + "{id}")
     Call<DetailEventList> getListEventDetail(@Path("id") long id);
 
-    @GET(Server.URI_LIST_COMMENT_BY_EVENT_ID + "{id}")
-    Call<List<Comment>> getListCommentByEventId(@Path("id") long id);
+    // Get all comments of each event
+    @GET(Server.URI_LIST_COMMENT_BY_EVENT_ID + "{so_thu_tu_su_kien}")
+    Call<EachEventCommentsList> getListCommentByEventId(
+            @Path("so_thu_tu_su_kien") int soThuTuSuKien,
+            @Query("id_toan_bo_su_kien") int idToanBoSuKien
+    );
+
 
     @GET(Server.URI_LIST_COMMENT_NEW + "{id}")
-    Call<CommentDto> getListCommentNew(@Path("id") int id);
+    Call<CommentList> getListCommentNew(@Path("id") int id);
 
     @FormUrlEncoded
     @POST(Server.URI_POST_EVENT_TIMELINE)

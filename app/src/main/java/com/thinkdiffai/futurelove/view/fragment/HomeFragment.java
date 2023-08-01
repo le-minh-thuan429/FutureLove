@@ -34,6 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
+
     private KProgressHUD kProgressHUD;
     private FragmentHomeBinding fragmentHomeBinding;
     private MainActivity mainActivity;
@@ -43,7 +44,6 @@ public class HomeFragment extends Fragment {
     private boolean isLoading;
     private boolean isLastPage;
     private int currentPage = 1;
-    List<DetailEventList> eventHomeDtoList;
 
 
     @Nullable
@@ -52,7 +52,6 @@ public class HomeFragment extends Fragment {
         fragmentHomeBinding = FragmentHomeBinding.inflate(inflater, container, false);
         mainActivity = (MainActivity) getActivity();
         kProgressHUD = mainActivity.createHud();
-        eventHomeDtoList = new ArrayList<>();
 
 
 //        checkClickSetImageMale =  true;
@@ -76,9 +75,7 @@ public class HomeFragment extends Fragment {
                 isLoading = true;
                 currentPage++;
                 loadNextPage();
-
             }
-
             @Override
             public boolean isLoading() {
                 return isLoading;
@@ -105,22 +102,20 @@ public class HomeFragment extends Fragment {
         eventList = new ArrayList<>();
         linearLayoutManager = new LinearLayoutManager(getActivity(), GridLayoutManager.VERTICAL, false);
         fragmentHomeBinding.rcvHome.setLayoutManager(linearLayoutManager);
+        // It automatically get the id of all events in EventHomeAdapter and assign into this::goToEventDetail
         eventHomeAdapter = new EventHomeAdapter(eventList, this::goToEventDetail, getContext());
         fragmentHomeBinding.rcvHome.setAdapter(eventHomeAdapter);
     }
 
-    private void goToEventDetail(long id) {
-        mainActivity.eventSummaryCurrentId = id;
+    // Current page is 4 because it is Timeline Fragment
+    private void goToEventDetail(int idToanBoSuKien) {
+        mainActivity.eventSummaryCurrentId = idToanBoSuKien;
         mainActivity.setCurrentPage(4);
-
     }
 
     private void getData(int currentPage) {
         if (!kProgressHUD.isShowing()) {
             kProgressHUD.show();
-        }
-        if (currentPage == 1) {
-            eventHomeDtoList.clear();
         }
         ApiService apiService = RetrofitClient.getInstance(Server.DOMAIN2).getRetrofit().create(ApiService.class);
         Call<DetailEventListParent> call = apiService.getEventListForHome(currentPage);

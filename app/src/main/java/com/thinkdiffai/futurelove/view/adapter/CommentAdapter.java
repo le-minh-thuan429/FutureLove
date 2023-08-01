@@ -18,7 +18,7 @@ import com.bumptech.glide.request.target.Target;
 import com.thinkdiffai.futurelove.R;
 import com.thinkdiffai.futurelove.databinding.ItemCommentBinding;
 import com.thinkdiffai.futurelove.util.Util;
-import com.thinkdiffai.futurelove.model.Comment;
+import com.thinkdiffai.futurelove.model.comment.Comment;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
     public final IOnClickItemListener iOnClickItem;
 
     public interface IOnClickItemListener {
-        void onClickItem(long id);
+        void onClickItem(int idToanBoSuKien, int soThuTuSuKienCon);
     }
 
     public void setData(List<Comment> comments) {
@@ -69,32 +69,32 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         Comment comment = comments.get(position);
         if (comment == null)
             return;
-        if (comment.getLink_nam_goc() != null&&!comment.getLink_nam_goc().isEmpty() && comment.getLink_nu_goc() != null&&!comment.getLink_nu_goc().isEmpty()) {
-            Glide.with(holder.itemView.getContext()).load(comment.getLink_nam_goc()).error(R.drawable.baseline_account_circle_24).into(holder.itemCommentBinding.imageAvatar1);
-            Glide.with(holder.itemView.getContext()).load(comment.getLink_nu_goc()).error(R.drawable.baseline_account_circle_24).into(holder.itemCommentBinding.imageAvatar2);
+        if (comment.getLinkNamGoc() != null&&!comment.getLinkNamGoc().isEmpty() && comment.getLinkNuGoc() != null&&!comment.getLinkNuGoc().isEmpty()) {
+            Glide.with(holder.itemView.getContext()).load(comment.getLinkNamGoc()).error(R.drawable.baseline_account_circle_24).into(holder.itemCommentBinding.imageAvatar1);
+            Glide.with(holder.itemView.getContext()).load(comment.getLinkNuGoc()).error(R.drawable.baseline_account_circle_24).into(holder.itemCommentBinding.imageAvatar2);
         }else if (urlImgFemale!=null&&!urlImgFemale.isEmpty()&&urlImgMale!=null&&!urlImgMale.isEmpty()){
             Glide.with(holder.itemView.getContext()).load(urlImgMale).error(R.drawable.baseline_account_circle_24).into(holder.itemCommentBinding.imageAvatar1);
             Glide.with(holder.itemView.getContext()).load(urlImgFemale).error(R.drawable.baseline_account_circle_24).into(holder.itemCommentBinding.imageAvatar2);
         }
-        if (comment.getDevice_cmt().trim().equals("")) {
+        if (comment.getDeviceCmt().trim().equals("")) {
             holder.itemCommentBinding.tvDeviceName.setVisibility(View.GONE);
         } else {
-            holder.itemCommentBinding.tvDeviceName.setText("dv: "+comment.getDevice_cmt());
+            holder.itemCommentBinding.tvDeviceName.setText("dv: "+comment.getDeviceCmt());
             holder.itemCommentBinding.tvDeviceName.setVisibility(View.VISIBLE);
 
         }
-        if (comment.getDia_chi_ip().trim().equals("")) {
+        if (comment.getDiaChiIp().trim().equals("")) {
             holder.itemCommentBinding.tvDeviceName.setVisibility(View.GONE);
         } else {
-            holder.itemCommentBinding.tvDeviceName.setText("ip: " + comment.getDia_chi_ip());
+            holder.itemCommentBinding.tvDeviceName.setText("ip: " + comment.getDiaChiIp());
             holder.itemCommentBinding.tvDeviceName.setVisibility(View.VISIBLE);
         }
-        holder.itemCommentBinding.tvContent.setText(comment.getNoi_dung_cmt());
-        if (comment.getThoi_gian_release() == null) {
+        holder.itemCommentBinding.tvContent.setText(comment.getNoiDungCmt());
+        if (comment.getThoiGianRelease() == null) {
             holder.itemCommentBinding.tvTime.setVisibility(View.INVISIBLE);
         } else {
             holder.itemCommentBinding.tvTime.setVisibility(View.VISIBLE);
-            holder.itemCommentBinding.tvTime.setText(Util.calTimeStampComment(comment.getThoi_gian_release()));
+            holder.itemCommentBinding.tvTime.setText(Util.calTimeStampComment(comment.getThoiGianRelease()));
         }
 
 
@@ -147,7 +147,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         holder.itemCommentBinding.layoutComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                iOnClickItem.onClickItem(comment.getId_toan_bo_su_kien());
+                iOnClickItem.onClickItem(comment.getIdToanBoSuKien(), comment.getSoThuTuSuKien());
             }
         });
     }

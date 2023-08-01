@@ -612,7 +612,7 @@ public class PairingFragment extends Fragment {
     }
 
 
-    private void goToEventDetail(long id) {
+    private void goToEventDetail(int id) {
         mainActivity.eventSummaryCurrentId = id;
         mainActivity.setCurrentPage(3);
 
