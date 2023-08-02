@@ -4,23 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thinkdiffai.futurelove.view.activity.MainActivity"
+    android:background="@drawable/bg_home"
 
-    android:background="@drawable/bg_home">
+    tools:context="com.thinkdiffai.futurelove.view.activity.MainActivity">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_nav"/>
-
-
+        android:layout_above="@+id/bottom_nav" />
     <include
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/bottom_nav"
         layout="@layout/layout_bottom_nav"
-        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
 
-        />
 </RelativeLayout>
