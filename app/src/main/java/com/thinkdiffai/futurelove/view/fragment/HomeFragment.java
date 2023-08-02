@@ -41,6 +41,7 @@ public class HomeFragment extends Fragment {
     private EventHomeAdapter eventHomeAdapter;
     private List<DetailEventList> eventList;
     private LinearLayoutManager linearLayoutManager;
+
     private boolean isLoading;
     private boolean isLastPage;
     private int currentPage = 1;
