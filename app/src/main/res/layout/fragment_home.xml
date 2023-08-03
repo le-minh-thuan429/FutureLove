@@ -23,7 +23,7 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="290dp"
+                android:layout_width="280dp"
                 android:layout_height="48dp"
                 android:background="@drawable/frame_search"
                 android:orientation="horizontal">

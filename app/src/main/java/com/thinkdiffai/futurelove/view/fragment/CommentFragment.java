@@ -60,7 +60,6 @@ public class CommentFragment extends Fragment {
         mainActivity = (MainActivity) getActivity();
         kProgressHUD = mainActivity.createHud();
 
-
         try {
             initUi();
             getCommentNew();
@@ -145,7 +144,6 @@ public class CommentFragment extends Fragment {
     }
 
     private void getCommentNew() {
-
         if (!kProgressHUD.isShowing()) {
             kProgressHUD.show();
         }

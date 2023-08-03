@@ -113,7 +113,7 @@ public class PairingFragment extends Fragment {
     }
 
     private void initListener() {
-        fragmentPairingBinding.btnImageFemale.setOnClickListener(new View.OnClickListener() {
+        fragmentPairingBinding.btnSelectPersonFemale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 checkClickSetImageMale = false;
@@ -122,7 +122,7 @@ public class PairingFragment extends Fragment {
         });
 
 
-        fragmentPairingBinding.btnImageMale.setOnClickListener(new View.OnClickListener() {
+        fragmentPairingBinding.btnSelectPersonMale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 checkClickSetImageMale = true;
@@ -136,7 +136,7 @@ public class PairingFragment extends Fragment {
             public void onClick(View view) {
                 if (!isCheckSetImageFemale || !isCheckSetImageMale) {
                     myDialog = getDialog();
-                    myDialog.setTitle("Can  not Face recognition");
+                    myDialog.setTitle("Can not Face recognition");
                     myDialog.setContent("not enough faces have been identified");
                     myDialog.setContentButton("Ok");
                     myDialog.show();
@@ -267,7 +267,7 @@ public class PairingFragment extends Fragment {
 
     private void startCamera() throws FileNotFoundException {
         closeDialog();
-        File cacheDir = getActivity().getApplicationContext().getCacheDir();
+        File cacheDir = Objects.requireNonNull(getActivity()).getApplicationContext().getCacheDir();
 
 // start default camera
 
@@ -334,7 +334,6 @@ public class PairingFragment extends Fragment {
             } catch (Exception e) {
 
             }
-
         }
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICKER_SELECT) {
             try {
@@ -356,6 +355,7 @@ public class PairingFragment extends Fragment {
                                     throw new RuntimeException(e);
                                 }
                                 isCheckSetImageFemale = true;
+                                fragmentPairingBinding.cvImageFemale.setVisibility(View.VISIBLE);
                                 fragmentPairingBinding.imgFemale.setImageBitmap(bitmap);
                             } else {
                                 isCheckSetImageFemale = false;
@@ -364,7 +364,6 @@ public class PairingFragment extends Fragment {
                         }, 4000);
 
                     } else {
-
 
                         detectionFace(bitmap);
                         Handler handler = new Handler();
@@ -378,6 +377,7 @@ public class PairingFragment extends Fragment {
 //                                imgMalePath = uriToFilePath(selectedMediaUri);
 
                                 isCheckSetImageMale = true;
+                                fragmentPairingBinding.cvImageMale.setVisibility(View.VISIBLE);
                                 fragmentPairingBinding.imgMale.setImageBitmap(bitmap);
                             } else {
                                 isCheckSetImageMale = false;
@@ -483,7 +483,6 @@ public class PairingFragment extends Fragment {
         btnSelectImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 openStorage();
             }
         });
@@ -492,7 +491,6 @@ public class PairingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-
                     openCamera();
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);

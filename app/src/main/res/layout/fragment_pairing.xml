@@ -29,7 +29,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_frame_search"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="68dp"
         android:layout_marginEnd="16dp"
@@ -40,8 +40,8 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageButton
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_gravity="center"
             android:layout_margin="4dp"
             android:background="@color/transparent"
@@ -58,7 +58,7 @@
             android:hint="@string/search"
             android:textColor="@color/black"
             android:textColorHint="#9B9B9B"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -339,14 +339,12 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/btn_image_male"
+            android:id="@+id/cv_image_male"
             android:layout_width="94dp"
             android:layout_height="94dp"
             android:layout_marginStart="5.6dp"
             android:layout_marginTop="4.5dp"
-
-            android:visibility="invisible"
-
+            android:visibility="gone"
             app:cardCornerRadius="1000dp"
             app:layout_constraintBottom_toBottomOf="@+id/btn_select_person_male"
             app:layout_constraintStart_toStartOf="@+id/btn_select_person_male"
@@ -390,14 +388,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/btn_image_female"
+            android:id="@+id/cv_image_female"
             android:layout_width="94dp"
             android:layout_height="94dp"
             app:cardCornerRadius="1000dp"
             app:cardPreventCornerOverlap="false"
             android:layout_marginEnd="5.6dp"
             android:layout_marginTop="4.5dp"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/btn_select_person_female"
             app:layout_constraintTop_toTopOf="@+id/btn_select_person_female">
 

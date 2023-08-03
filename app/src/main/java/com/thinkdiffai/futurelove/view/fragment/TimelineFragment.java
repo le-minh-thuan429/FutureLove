@@ -580,13 +580,11 @@ public class TimelineFragment extends Fragment {
         }
     }
 
-
     private void displayPaginate(int numberPage) {
         List<Integer> integerList = new ArrayList<>();
         for (int i = 1; i <= numberPage; i++) {
             integerList.add(i);
         }
-
 
 //        SnapHelper snapHelper = new LinearSnapHelper();
 //        snapHelper.attachToRecyclerView(fragmentTimelineBinding.rcvIndicator);
