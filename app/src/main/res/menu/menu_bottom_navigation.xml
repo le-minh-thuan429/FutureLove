@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/nav_home"
-        android:icon="@drawable/btn_menu_home_white"
-        android:title="" />
+        android:icon="@drawable/ic_home"
+        android:title=""
+        />
     <item
         android:id="@+id/nav_comment"
-        android:icon="@drawable/btn_menu_history_white"
+        android:icon="@drawable/ic_comment"
         android:title="" />
 
     <item
         android:id="@+id/nav_pairing"
-        android:icon="@drawable/btn_meu_heart_white"
+        android:icon="@drawable/ic_pairing_couple"
         android:title="" />
     <item
         android:id="@+id/nav_timeline"
-        android:icon="@drawable/btn_menu_timeline_white"
+        android:icon="@drawable/ic_timeeline"
         android:title="" />
 
 

@@ -14,4 +14,6 @@
     <string name="ask_having_account">Don’t have an account?</string>
     <string name="register">Register</string>
     <string name="login">Login</string>
+    <string name="search">Search</string>
+    <string name="event_detail">Our first date was a mix of nervousness and excitement. We shared stories</string>
 </resources>
