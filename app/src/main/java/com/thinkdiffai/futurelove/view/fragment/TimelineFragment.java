@@ -123,7 +123,7 @@ public class TimelineFragment extends Fragment {
         fragmentTimelineBinding.viewpagerTimeline.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-                iOnScrollEventList(position);
+                iOnScrollEventList(position + 1);
                 getDataComment(position, mainActivity.eventSummaryCurrentId);
                 linearLayoutManager.scrollToPosition(position);
                 pageAdapter.setCurrentPosition(position);

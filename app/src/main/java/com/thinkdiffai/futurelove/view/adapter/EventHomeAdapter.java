@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.thinkdiffai.futurelove.databinding.ItemRcvEvent1Binding;
 import com.thinkdiffai.futurelove.databinding.ItemRcvHistoryEventBinding;
 import com.thinkdiffai.futurelove.model.Comon;
 import com.thinkdiffai.futurelove.model.DetailEvent;
@@ -40,9 +41,11 @@ public class EventHomeAdapter extends RecyclerView.Adapter<EventHomeAdapter.Even
     @NonNull
     @Override
     public EventHomeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemRcvHistoryEventBinding itemRcvHistoryEventBinding = ItemRcvHistoryEventBinding
+
+        ItemRcvEvent1Binding itemBinding = ItemRcvEvent1Binding
                 .inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new EventHomeViewHolder(itemRcvHistoryEventBinding);
+
+        return new EventHomeViewHolder(itemBinding);
     }
 
     @Override
@@ -59,20 +62,20 @@ public class EventHomeAdapter extends RecyclerView.Adapter<EventHomeAdapter.Even
 
         Glide.with(holder.itemView.getContext())
                 .load(detailEvents.get(0).getLinkNamGoc())
-                .into(holder.itemRcvHistoryEventBinding.imgPerson1);
+                .into(holder.itemBinding.imgPerson1);
 
         Glide.with(holder.itemView.getContext())
                 .load(detailEvents.get(0).getLinkNuGoc())
-                .into(holder.itemRcvHistoryEventBinding.imgPerson2);
-        Picasso.get().load(detailEvents.get(0).getLinkDaSwap()).into(holder.itemRcvHistoryEventBinding.imgContent);
+                .into(holder.itemBinding.imgPerson2);
+        Picasso.get().load(detailEvents.get(0).getLinkDaSwap()).into(holder.itemBinding.imgContent);
 
         int commaIndex = detailEvents.get(0).getRealTime().indexOf(",");
         String date = detailEvents.get(0).getRealTime().substring(0, commaIndex);
-        holder.itemRcvHistoryEventBinding.tvContent.setText(detailEvents.get(0).getTenSuKien());
-        holder.itemRcvHistoryEventBinding.tvDate.setText(date);
+        holder.itemBinding.tvContent.setText(detailEvents.get(0).getTenSuKien());
+        holder.itemBinding.tvDate.setText(date);
         //Toast.makeText(context,  events.get(number).getTom_Luoc_Text(), Toast.LENGTH_SHORT).show();
 
-        holder.itemRcvHistoryEventBinding.layoutItem.setOnClickListener(new View.OnClickListener() {
+        holder.itemBinding.layoutItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -92,11 +95,12 @@ public class EventHomeAdapter extends RecyclerView.Adapter<EventHomeAdapter.Even
     }
 
     public static class EventHomeViewHolder extends RecyclerView.ViewHolder {
-        private final ItemRcvHistoryEventBinding itemRcvHistoryEventBinding;
+//        private final ItemRcvHistoryEventBinding itemRcvHistoryEventBinding;
 
-        public EventHomeViewHolder(ItemRcvHistoryEventBinding itemRcvHistoryEventBinding) {
-            super(itemRcvHistoryEventBinding.getRoot());
-            this.itemRcvHistoryEventBinding = itemRcvHistoryEventBinding;
+        private final ItemRcvEvent1Binding itemBinding;
+        public EventHomeViewHolder(ItemRcvEvent1Binding itemBinding) {
+            super(itemBinding.getRoot());
+            this.itemBinding = itemBinding;
         }
     }
 
