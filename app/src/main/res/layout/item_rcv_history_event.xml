@@ -21,6 +21,7 @@
             />
 
     </androidx.cardview.widget.CardView>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/layout_img_person1"
         android:layout_width="@dimen/define_dimen_60"
@@ -30,14 +31,12 @@
         android:layout_marginStart="@dimen/define_dimen_6"
         android:layout_marginTop="@dimen/define_dimen_6"
         app:cardCornerRadius="@dimen/define_dimen_100">
-
         <ImageView
             android:id="@+id/img_person1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/img_person" />
-
     </androidx.cardview.widget.CardView>
 
 

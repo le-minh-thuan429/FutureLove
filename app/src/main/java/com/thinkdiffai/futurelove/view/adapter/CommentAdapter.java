@@ -71,10 +71,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             return;
         if (comment.getLinkNamGoc() != null&&!comment.getLinkNamGoc().isEmpty() && comment.getLinkNuGoc() != null&&!comment.getLinkNuGoc().isEmpty()) {
             Glide.with(holder.itemView.getContext()).load(comment.getLinkNamGoc()).error(R.drawable.baseline_account_circle_24).into(holder.itemCommentBinding.imageAvatar1);
-            Glide.with(holder.itemView.getContext()).load(comment.getLinkNuGoc()).error(R.drawable.baseline_account_circle_24).into(holder.itemCommentBinding.imageAvatar2);
+//            Glide.with(holder.itemView.getContext()).load(comment.getLinkNuGoc()).error(R.drawable.baseline_account_circle_24).into(holder.itemCommentBinding.imageAvatar2);
         }else if (urlImgFemale!=null&&!urlImgFemale.isEmpty()&&urlImgMale!=null&&!urlImgMale.isEmpty()){
             Glide.with(holder.itemView.getContext()).load(urlImgMale).error(R.drawable.baseline_account_circle_24).into(holder.itemCommentBinding.imageAvatar1);
-            Glide.with(holder.itemView.getContext()).load(urlImgFemale).error(R.drawable.baseline_account_circle_24).into(holder.itemCommentBinding.imageAvatar2);
+//            Glide.with(holder.itemView.getContext()).load(urlImgFemale).error(R.drawable.baseline_account_circle_24).into(holder.itemCommentBinding.imageAvatar2);
         }
         if (comment.getDeviceCmt().trim().equals("")) {
             holder.itemCommentBinding.tvDeviceName.setVisibility(View.GONE);
