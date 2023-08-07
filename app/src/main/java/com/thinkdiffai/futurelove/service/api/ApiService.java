@@ -13,10 +13,13 @@ import java.util.Map;
 
 import retrofit2.Call;
 
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.HeaderMap;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -43,8 +46,32 @@ public interface ApiService {
 //            .create(ApiService.class);
 
 
+//    @FormUrlEncoded
+//    @POST(Server.URI_PAIRING)
+//    Call<ResponsePairingDto> postEvent(
+//            @HeaderMap Map<String, String> headers);
+
+//    @GET(Server.URI_PAIRING)
+//    Call<DetailEventList> postEvent(
+//            @HeaderMap Map<String, String> headers,
+//            @Query("device_them_su_kien") String deviceThemSuKien,
+//            @Query("ip_them_su_kien") String ipThemSuKien,
+//            @Query("id_user") int idUser,
+//            @Query("ten_nam") String tenNam,
+//            @Query("ten_nu") String tenNu
+//    );
+
     @GET(Server.URI_PAIRING)
-    Call<ResponsePairingDto> postEvent(@HeaderMap Map<String, String> headers);
+    Call<Object> postEvent(
+            @Header(Server.KEY_HEADER1) String imageLink1,
+            @Header(Server.KEY_HEADER2) String imageLink2,
+            @Query("device_them_su_kien") String deviceThemSuKien,
+            @Query("ip_them_su_kien") String ipThemSuKien,
+            @Query("id_user") int userId,
+            @Query("ten_nam") String tenNam,
+            @Query("ten_nu") String tenNu
+    );
+
 
     @GET(Server.URI_GET_NETWORK_STATUS)
     Call<NetworkModel> getIpApiResponse();

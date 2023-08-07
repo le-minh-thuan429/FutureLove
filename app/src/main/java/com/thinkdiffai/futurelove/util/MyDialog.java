@@ -88,7 +88,6 @@ public class MyDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         setContentView(R.layout.layout_dialog);
@@ -109,10 +108,6 @@ public class MyDialog extends Dialog {
         } else {
             button.setVisibility(View.GONE);
         }
-
-
-
-
 
         button.setOnClickListener(view -> MyDialog.this.dismiss());
     }

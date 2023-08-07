@@ -356,6 +356,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
                 tools:srcCompat="@tools:sample/avatars" />
         </androidx.cardview.widget.CardView>
@@ -403,6 +404,7 @@
                 android:id="@+id/img_female"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scaleType="centerCrop"
                 android:layout_gravity="center"
                 tools:srcCompat="@tools:sample/avatars" />
         </androidx.cardview.widget.CardView>

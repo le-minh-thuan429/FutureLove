@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,15 +33,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import com.thinkdiffai.futurelove.R;
-import com.thinkdiffai.futurelove.databinding.FragmentPairingBinding;
-import com.thinkdiffai.futurelove.util.MyDialog;
-import com.thinkdiffai.futurelove.util.Util;
-import com.thinkdiffai.futurelove.model.ResponsePairingDto;
-import com.thinkdiffai.futurelove.service.api.ApiService;
-import com.thinkdiffai.futurelove.service.api.RetrofitClient;
-import com.thinkdiffai.futurelove.service.api.Server;
-import com.thinkdiffai.futurelove.view.activity.MainActivity;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.mlkit.vision.common.InputImage;
@@ -49,15 +41,21 @@ import com.google.mlkit.vision.face.FaceDetection;
 import com.google.mlkit.vision.face.FaceDetector;
 import com.google.mlkit.vision.face.FaceDetectorOptions;
 import com.google.mlkit.vision.face.FaceLandmark;
+import com.thinkdiffai.futurelove.R;
+import com.thinkdiffai.futurelove.databinding.FragmentPairingBinding;
+import com.thinkdiffai.futurelove.service.api.ApiService;
+import com.thinkdiffai.futurelove.service.api.RetrofitClient;
+import com.thinkdiffai.futurelove.service.api.Server;
+import com.thinkdiffai.futurelove.util.MyDialog;
+import com.thinkdiffai.futurelove.util.Util;
+import com.thinkdiffai.futurelove.view.activity.MainActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import io.github.rupinderjeet.kprogresshud.KProgressHUD;
@@ -67,15 +65,15 @@ import retrofit2.Callback;
 public class PairingFragment extends Fragment {
     private FragmentPairingBinding fragmentPairingBinding;
     private static final int IMAGE_PICKER_SELECT = 1889;
-
     private BottomSheetDialog bottomSheetDialog;
     private static final int CAMERA_REQUEST = 1888;
 
 
     private static final String TAG = "CameraActivity";
+    private static final String TAG1 = MainActivity.class.getName();
+
     private static final int REQUEST_CODE_PERMISSIONS = 100;
     private static final int REQUEST_CODE_PERMISSIONS_STORAGE = 101;
-
     private boolean checkClickSetImageMale;
     private boolean isCheckSetImageFemale = false;
     private boolean isCheckSetImageMale = false;
@@ -89,6 +87,30 @@ public class PairingFragment extends Fragment {
     private MainActivity mainActivity;
     private MyDialog myDialog;
 
+//    private ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
+//            new ActivityResultContracts.StartActivityForResult(),
+//            new ActivityResultCallback<ActivityResult>() {
+//                @Override
+//                public void onActivityResult(ActivityResult result) {
+//                    Log.e(TAG1, "onActivityResult");
+//                    if (result.getResultCode() == RESULT_OK) {
+//                        // There are no request code
+//                        Intent data = result.getData();
+//                        if (data == null) {
+//                            return;
+//                        }
+//
+//                        Uri uri = data.getData();
+//                        try {
+//                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(mainActivity.getContentResolver(), uri);
+//                        } catch (IOException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    }
+//                }
+//            }
+//    );
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -101,11 +123,13 @@ public class PairingFragment extends Fragment {
                 .setCancellable(true)
                 .setAnimationSpeed(2)
                 .setDimAmount(0.5f);
+
+
 //        checkClickSetImageMale =  true;
         try {
             initListener();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             Log.e("ExceptionRuntime", e.toString());
         }
 
@@ -120,7 +144,6 @@ public class PairingFragment extends Fragment {
                 openDialog(view);
             }
         });
-
 
         fragmentPairingBinding.btnSelectPersonMale.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,7 +160,7 @@ public class PairingFragment extends Fragment {
                 if (!isCheckSetImageFemale || !isCheckSetImageMale) {
                     myDialog = getDialog();
                     myDialog.setTitle("Can not Face recognition");
-                    myDialog.setContent("not enough faces have been identified");
+                    myDialog.setContent("Not enough faces have been identified");
                     myDialog.setContentButton("Ok");
                     myDialog.show();
                 } else {
@@ -160,8 +183,10 @@ public class PairingFragment extends Fragment {
                             urlImageMale = Util.uploadImage2(imgBase64Male, getActivity());
                             urlImageFemale = Util.uploadImage2(imgBase64Female, getActivity());
 
+                            Log.d("PhongNN", "Male Image URL: " + urlImageMale + "\nFemale Image URL: " + urlImageFemale);
                             return null;
                         }
+
                         @SuppressLint("StaticFieldLeak")
                         @Override
                         protected void onPostExecute(Void result) {
@@ -171,8 +196,6 @@ public class PairingFragment extends Fragment {
                             handler.postDelayed(() -> {
                                 postData(urlImageMale, urlImageFemale);
                             }, 4000);
-
-
                         }
                     }.execute();
                 }
@@ -186,20 +209,31 @@ public class PairingFragment extends Fragment {
         if (!kProgressHUD.isShowing()) {
             kProgressHUD.show();
         }
-        Map<String, String> headers = new HashMap<>();
-        headers.put(Server.KEY_HEADER1, imageUrl1);
-        headers.put(Server.KEY_HEADER2, imageUrl2);
-        ApiService apiService = RetrofitClient.getInstance(Server.DOMAIN2).getRetrofit().create(ApiService.class);
-        Call<ResponsePairingDto> call = apiService.postEvent(headers);
-        call.enqueue(new Callback<ResponsePairingDto>() {
-            @Override
-            public void onResponse(Call<ResponsePairingDto> call, retrofit2.Response<ResponsePairingDto> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    ResponsePairingDto responsePairingDto = response.body();
-                    List<ResponsePairingDto.TimeResponse> eventFutures = responsePairingDto.getJson2();
-                    mainActivity.eventSummaryCurrentId = eventFutures.get(0).getId_toan_bo_su_kien();
+//        Map<String, String> headers = new HashMap<>();
+//        headers.put(Server.KEY_HEADER1, imageUrl1);
+//        headers.put(Server.KEY_HEADER2, imageUrl2);
+        String deviceThemSuKien = "Iphone 14 Pro mux";
+        String ipThemSuKien = "3.3.3.3";
+        int idUser = 1;
+        String tenNam = "Lam";
+        String tenNu = "Lu";
 
-                    goToEventDetail(mainActivity.eventSummaryCurrentId);
+        ApiService apiService = RetrofitClient.getInstance(Server.DOMAIN2).getRetrofit().create(ApiService.class);
+        Call<Object> call = apiService.postEvent(imageUrl1, imageUrl2, deviceThemSuKien, ipThemSuKien, idUser, tenNam, tenNu);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(Call<Object> call, retrofit2.Response<Object> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d("PhongNN", "Post Image Success");
+                    myDialog = getDialog();
+                    myDialog.setTitle("Successfully!");
+                    myDialog.setContent("Post the two images of a couple successfully!");
+                    myDialog.setContentButton("OK");
+                    myDialog.show();
+//                    List<ResponsePairingDto.TimeResponse> eventFutures = responsePairingDto.getJson2();
+//                    mainActivity.eventSummaryCurrentId = eventFutures.get(0).getId_toan_bo_su_kien();
+//
+//                    goToEventDetail(mainActivity.eventSummaryCurrentId);
 
                 }
                 resetDetect();
@@ -209,12 +243,12 @@ public class PairingFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ResponsePairingDto> call, Throwable t) {
+            public void onFailure(Call<Object> call, Throwable t) {
                 resetDetect();
                 if (!isCheckSetImageFemale || !isCheckSetImageMale) {
                     myDialog = getDialog();
                     myDialog.setTitle("internet connection error");
-                    myDialog.setContent("make sure internet connection and try again!");
+                    myDialog.setContent("Make sure internet connection and try again!");
                     myDialog.setContentButton("Ok");
                     myDialog.show();
                 }
@@ -228,9 +262,11 @@ public class PairingFragment extends Fragment {
 
 
     private void openStorage() {
+        // Check permission
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             startOpenStorage();
         } else {
+            // If not granted, request permission
             ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSIONS_STORAGE);
         }
     }
@@ -247,10 +283,15 @@ public class PairingFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            try {
-                startCamera();
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                try {
+                    startCamera();
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                Toast.makeText(getActivity(), "Camera permission denied", Toast.LENGTH_SHORT).show();
             }
         }
         if (requestCode == REQUEST_CODE_PERMISSIONS_STORAGE) {
@@ -260,7 +301,7 @@ public class PairingFragment extends Fragment {
 
     private void startOpenStorage() {
         closeDialog();
-        Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent pickIntent = new Intent(Intent.ACTION_GET_CONTENT, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         pickIntent.setType("image/* video/*");
         startActivityForResult(pickIntent, IMAGE_PICKER_SELECT);
     }
@@ -268,10 +309,7 @@ public class PairingFragment extends Fragment {
     private void startCamera() throws FileNotFoundException {
         closeDialog();
         File cacheDir = Objects.requireNonNull(getActivity()).getApplicationContext().getCacheDir();
-
-// start default camera
-
-
+        // start default camera
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             // Create the File where the photo should go
@@ -283,7 +321,7 @@ public class PairingFragment extends Fragment {
             imageFile = new File(photoFile, System.currentTimeMillis() + ".jpg");
 
             Uri photoURI = FileProvider.getUriForFile(requireContext(),
-                    "com.example.futurelove.fileprovider",
+                    "com.thinkdiffai.futurelove.fileprovider",
                     imageFile);
             cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
             startActivityForResult(cameraIntent, CAMERA_REQUEST);
@@ -310,6 +348,7 @@ public class PairingFragment extends Fragment {
                         if (resultDetech != null && Objects.equals(resultDetech, "")) {
                             imgBase64Female = imagefile;
                             isCheckSetImageFemale = true;
+                            fragmentPairingBinding.cvImageFemale.setVisibility(View.VISIBLE);
                             fragmentPairingBinding.imgFemale.setImageBitmap(bitmap);
                         } else {
                             isCheckSetImageFemale = false;
@@ -324,6 +363,7 @@ public class PairingFragment extends Fragment {
                         if (Objects.equals(resultDetech.toString(), "")) {
                             imgBase64Male = imagefile;
                             isCheckSetImageMale = true;
+                            fragmentPairingBinding.cvImageMale.setVisibility(View.VISIBLE);
                             fragmentPairingBinding.imgMale.setImageBitmap(bitmap);
                         } else {
                             isCheckSetImageMale = false;
@@ -542,21 +582,13 @@ public class PairingFragment extends Fragment {
 //                    resultDetech.set(processFaceDetectionResult(faces));
 
                     resultDetech = processFaceDetectionResult(faces);
-
                     if (!resultDetech.toString().equals("")) {
-
-
                         myDialog = getDialog();
-                        myDialog.setTitle("Can  not Face recognition");
+                        myDialog.setTitle("Can not process the face recognition");
                         myDialog.setContent(resultDetech.toString());
                         myDialog.setContentButton("Ok");
                         myDialog.show();
-
-
-
                     }
-
-
                 })
                 .addOnFailureListener(e -> {
                     // Xử lý khi có lỗi xảy ra trong quá trình nhận dạng khuôn mặt
@@ -629,8 +661,8 @@ public class PairingFragment extends Fragment {
     }
 
     private MyDialog getDialog() {
-        if (myDialog==null){
-             myDialog = MyDialog.getInstance(getContext());
+        if (myDialog == null) {
+            myDialog = MyDialog.getInstance(getContext());
             Window window = myDialog.getWindow();
             if (window != null) {
                 WindowManager.LayoutParams layoutParams = window.getAttributes();
@@ -651,9 +683,11 @@ public class PairingFragment extends Fragment {
     private void resetDetect() {
         fragmentPairingBinding.imgFemale.setImageDrawable(null);
         fragmentPairingBinding.imgMale.setImageDrawable(null);
-         isCheckSetImageFemale = false;
+        fragmentPairingBinding.cvImageFemale.setVisibility(View.GONE);
+        fragmentPairingBinding.cvImageMale.setVisibility(View.GONE);
+        isCheckSetImageFemale = false;
         isCheckSetImageMale = false;
         imgBase64Female = "";
-        imgBase64Male ="";
+        imgBase64Male = "";
     }
 }

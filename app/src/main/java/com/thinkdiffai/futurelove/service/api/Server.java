@@ -7,7 +7,7 @@ public interface Server {
 
     String GET_NETWORK_API_DOMAIN = "http://ip-api.com/";
 
-    String URI_PAIRING = "getdata/";
+    String URI_PAIRING = "getdata";
 
     String URI_GET_NETWORK_STATUS = "json/";
 

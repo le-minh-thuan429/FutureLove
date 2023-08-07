@@ -302,8 +302,6 @@ public class TimelineFragment extends Fragment {
             kProgressHUD.show();
         }
         String deviceName = Build.MANUFACTURER + Build.MODEL;
-
-
         Comment comment = new Comment(
                 1,
                 content,
